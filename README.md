@@ -1,38 +1,38 @@
-# sv
+# Bienvenidos a [mulita.app](http://mulita.app)
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+¡Hola! Somos un equipo de dos apasionados desarrolladores trabajando en [mulita.app](http://mulita.app), un sitio web desarrollado con [Svelte](https://svelte.dev). Nuestro objetivo es albergar y mostrar nuestros futuros proyectos, funcionando como un portafolio personal colaborativo. 
 
-## Creating a project
+## Tecnologías Utilizadas
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Framework**: Svelte
+- **Lenguajes**: HTML, CSS, JavaScript
+- **Herramientas de Desarrollo**: Git, Visual Studio Code
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Características
 
-# create a new project in my-app
-npx sv create my-app
-```
+- **Proyectos Colaborativos**: Una plataforma que destaca nuestros proyectos actuales y futuros.
+- **Desarrollo Ágil**: Enfocados en mejorar continuamente la experiencia del usuario.
+- **Innovación**: Adoptamos las tecnologías y prácticas más recientes en desarrollo web.
 
-## Developing
+## Equipo
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- **[Magdalena Racedo](https://linkedin.com/)**: Desarrollador Frontend especializado en Svelte y diseño de interfaces.
+- **[Fernando Gomez Albornoz](https://linkedin.com/in/fernando-gómez-albornoz-39a043148/)**: Desarrollador Backend apasionado por la arquitectura de software y las bases de datos.
 
-```bash
-npm run dev
+## Próximos Pasos
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+- **Lanzamiento Beta**: Estén atentos al lanzamiento de la versión beta de [mulita.app](http://mulita.app).
+- **Feedback**: Nos encantaría escuchar sus comentarios y sugerencias para mejorar el sitio.
 
-## Building
+## Contacto
 
-To create a production version of your app:
+Si tienes alguna pregunta o simplemente quieres saludar, puedes contactarnos a través de:
 
-```bash
-npm run build
-```
+- **Email**: fgalbornoz@proton.me
 
-You can preview the production build with `npm run preview`.
+¡Gracias por visitar [mulita.app](http://mulita.app)! Esperamos que disfruten de nuestros proyectos tanto como nosotros disfrutamos creándolos.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+---
+
+*Este proyecto es de código abierto y está disponible bajo la licencia [MIT](LICENSE).*
+
