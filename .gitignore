@@ -1,6 +1,7 @@
 test-results
 node_modules
 docs
+e2e
 
 # Output
 .output
