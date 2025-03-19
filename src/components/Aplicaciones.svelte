@@ -25,9 +25,17 @@
     background: #343233;
     padding: 20px;
     border-radius: 10px;
+    
+    /* Mantener la estructura sin empujar todo a la derecha */
     display: flex;
-    justify-content: flex-end;
-    text-align: right;
+    flex-direction: column; /* Mantiene alineación vertical */
+    align-items: flex-end; /* Solo alinea los elementos, sin afectar su estructura */
+}
+
+    .aplicacionD .aplicacion-container-detalles {
+        display: flex;
+        flex-direction: row-reverse; /* Invierte el orden de los elementos */
+        text-align: right; /* Solo afecta el texto, sin mover el layout */
     }
 
 
@@ -81,8 +89,8 @@
 </div>
 
 {#each apps as app, i}
-    {#if i % 2 === 0} <!-- Si es par, a la izquierda, sino a la derecha (uno y uno) -->
-    <div class="aplicacionI">
+    <!-- Si es par, a la izquierda, sino a la derecha (uno y uno) -->
+    <div class={i % 2 === 0 ? "aplicacionI" : "aplicacionD"}>
         <div class="aplicacion-titulo">
             <h2>{app.titulo}</h2>
         </div>
@@ -98,22 +106,4 @@
             </div>
         </div>
     </div>
-    {:else}
-    <div class="aplicacionD">
-        <div class="aplicacion-titulo">
-            <h2>{app.titulo}</h2>
-        </div>
-        <div class="aplicacion-container">
-            <div class="aplicacion-container-detalles">
-                <!-- Para cada app dentro del array 'apps', cargo su imagen con su texto alt -->
-                <img src={app.img} alt={app.alt} class="aplicacion-logo"/>
-                
-                <div class="aplicacion-info">
-                    <p>{app.descripcion}</p>
-                    <button>Saber más</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    {/if}
 {/each}
