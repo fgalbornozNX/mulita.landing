@@ -91,7 +91,7 @@ h1{
 .aplicacion-container-detalles {
     display: flex;
     align-items: center; /* Asegura que los elementos estén alineados verticalmente */
-    justify-content: center; /* Distribuye bien los espacios */
+    justify-content: flex-start; /* Distribuye bien los espacios */
     gap: 15px; /* Espaciado entre logo y texto */
 }
 
