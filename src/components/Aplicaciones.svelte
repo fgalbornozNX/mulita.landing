@@ -78,6 +78,10 @@ h1{
     }
 }
 
+.clearfix {
+    margin-bottom: 60px;
+}
+
 .clearfix::after {
     content: "";
     display: table;

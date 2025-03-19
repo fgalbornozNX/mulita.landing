@@ -6,10 +6,10 @@
 <style>
     /* Estilo del logo y el título */
     .logo {
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: bold;
         color: #FFFFFF;
-        margin-bottom: 1rem;
+        /* margin-bottom: 2rem; /* Espacio adicional para que el título no quede tapado */
     }
     
     .logo img {
@@ -19,11 +19,15 @@
         border-radius: 25%;
         margin-bottom: 0px;
     }
+
+    .logo p {
+        margin-top: 0.5rem; /* Espacio entre el logo y el título */
+    }
     
     /* Media query para pantallas más grandes */
     @media (min-width: 1366px) {
         .logo img {
-            width: 80%; /* Aún más pequeño en pantallas grandes */
+            width: 70%; /* Aún más pequeño en pantallas grandes */
         }
     }
     
@@ -33,9 +37,16 @@
             width: 80%; /* Logo más grande en pantallas pequeñas */
         }
     }
+
+    /* Estilo para la sección Inicio para no quedar tapada por el menú */
+    .inicio-section {
+        padding-bottom: 60px; /* Agrega espacio para que el menú no tape el contenido */
+    }
 </style>
 
-<div class="logo">
-    <img src={imgSrc} alt={imgAlt} />
-    <p>Mulita App</p>
+<div class="inicio-section">
+    <div class="logo">
+        <img src={imgSrc} alt={imgAlt} />
+        <p>Mulita App</p>
+    </div>
 </div>
