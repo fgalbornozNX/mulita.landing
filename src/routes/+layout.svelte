@@ -14,59 +14,60 @@
 </script>
 
 <style>
-    /* Estilos generales */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.menu {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 10px;
+    background-color: rgba(52, 50, 51, 0.9); /* Fondo semi-transparente */
+    padding: 10px 20px; /* Más padding a los lados para dar espacio */
+    z-index: 1000; /* Asegura que siempre esté por encima */
+}
 
-    .container {
-        text-align: center;
-    }
+/* Ajustes para los botones */
+.menu button {
+    background-color: #545454;
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 12px;
+    min-width: 140px;
+}
 
-    /* Estilo para los botones */
+/* Cuando se selecciona una sección */
+.menu button.selected {
+    background-color: #333333;
+    transform: scale(1.1);
+}
+
+/* Evitar que el contenido quede tapado */
+.container {
+    padding-bottom: 60px; /* Agregar espacio suficiente para que el menú no lo tape */
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
     .menu {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        flex-wrap: wrap; /* Permite que los botones se ajusten en múltiples filas si es necesario */
+        flex-wrap: wrap; /* Permitir que los botones bajen si no entran */
+        padding: 10px;
     }
-
     .menu button {
-        background-color: #545454;
-        color: #FFFFFF;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        border-radius: 12px;
-        flex-grow: 1;
-        min-width: 120px;
+        min-width: 100px; /* Botones más pequeños */
+        font-size: 1rem;
     }
-
-    .menu button:hover {
-        background-color: #333333;
-    }
-
-    /* Media query para pantallas más pequeñas (como en móviles) */
-    @media (max-width: 768px) {
-        .menu {
-            bottom: 10px;
-            right: 10px;
-            gap: 5px; /* Menos espacio entre botones en pantallas pequeñas */
-        }
-    }
-
-    /* Estilo para el botón activo */
-    .menu button.selected {
-        background-color: #333333;
-        transform: scale(1.1); /* Agranda el botón seleccionado */
-    }
+}
 </style>
 
 <div class="container">

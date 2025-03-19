@@ -63,6 +63,21 @@ h1{
     }
 }
 
+@media (max-width: 600px) {
+    .aplicacionD .aplicacion-container-detalles {
+        flex-direction: column; /* También invertir en móviles */
+    }
+
+    .aplicacion-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .aplicacion-info {
+        margin-left: 0; /* Quitar margen en móviles para centrar */
+    }
+}
+
 .clearfix::after {
     content: "";
     display: table;
