@@ -68,6 +68,17 @@
         font-size: 1rem;
     }
 }
+
+@media (max-width: 370px) {
+    .menu {
+        flex-wrap: nowrap; /* Permitir que los botones bajen si no entran */
+        padding: 1px;
+    }
+    .menu button {
+        min-width: 75px; /* Botones más pequeños */
+        font-size: 0.8rem;
+    }
+}
 </style>
 
 <div class="container">
