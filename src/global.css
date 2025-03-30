@@ -1,0 +1,16 @@
+/* src/global.css */
+:root {
+    /* Colores principales */
+    --primary-color: #9ebe68;
+    --secondary-color: #a3d800;
+    --accent-color: #00bcd4;
+
+    /* Tonos neutros */
+    --primary-background: #2F2D2D;
+    --secondary-background: #343233;
+    --text-color: #ffffff;
+    --muted-text: #b0b0b0;
+
+    /* Sombras y efectos */
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}

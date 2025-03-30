@@ -1,4 +1,6 @@
 <script lang="ts">
+    import '../global.css';
+    
 	let { children } = $props();
 
     let activeSection = $state('Inicio'); // Variable para la sección activa
@@ -35,7 +37,7 @@
 
 /* Ajustes para los botones */
 .menu button {
-    background-color: #545454;
+    background-color: var(--secondary-background);
     color: #FFFFFF;
     border: none;
     padding: 12px 20px;
@@ -48,7 +50,7 @@
 
 /* Cuando se selecciona una sección */
 .menu button.selected {
-    background-color: #333333;
+    color: var(--secondary-color);
     transform: scale(1.1);
 }
 

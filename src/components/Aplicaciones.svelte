@@ -1,25 +1,25 @@
 <script lang="ts">
+    import "../global.css";
     let {apps} = $props();
 </script>
 
 <style>
 .titulo, .aplicacion-titulo {
     width: 300px;
-    border-top: 2px solid #9ebe68;
-    color: #9ebe68;
+    color: var(--primary-color);
     text-align: center;
     margin-bottom: 10px;
 }
 
 h1{
-    color: #9ebe68;
+    color: var(--primary-color);
     margin: 0px;
 }
 
 .aplicacionI, .aplicacionD {
     width: 45%; /* Casi la mitad de la pantalla */
     max-width: 600px; /* No ser demasiado anchas */
-    background: #343233;
+    background: var(--secondary-background);
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -106,7 +106,7 @@ h1{
 }
 
 .aplicacion-container-detalles button {
-background: #9ebe68;
+background: var(--primary-color);
 color: #343233;
 border: none;
 padding: 10px 20px;
@@ -117,7 +117,7 @@ transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .aplicacion-container-detalles button:hover {
-    background: #7ea84e;
+    background: var(--primary-color);
     transform: scale(1.05);
 }
 
@@ -141,7 +141,7 @@ p{
 </style>
 
 <div class="titulo">
-    <h1>APLICACIONES</h1>
+    <h1>Aplicaciones</h1>
 </div>
 
 <div class="clearfix">
