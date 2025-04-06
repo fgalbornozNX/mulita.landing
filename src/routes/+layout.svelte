@@ -16,7 +16,17 @@
 </script>
 
 <style>
+
+@font-face {
+        font-family: 'PilcrowRounded-Bold';
+        src: url('/fonts/PilcrowRounded-Bold.woff') format('woff'),
+             url('/fonts/PilcrowRounded-Bold.ttf') format('truetype');
+        font-weight: 700;
+        font-display: swap;
+        font-style: normal;
+}
 * {
+    font-family: PilcrowRounded-Bold;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -41,7 +51,7 @@
     color: #FFFFFF;
     border: none;
     padding: 12px 20px;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
     border-radius: 12px;
@@ -51,7 +61,7 @@
 /* Cuando se selecciona una sección */
 .menu button.selected {
     color: var(--secondary-color);
-    transform: scale(1.1);
+    transform: scale(1.3);
 }
 
 /* Evitar que el contenido quede tapado */

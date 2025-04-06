@@ -1,6 +1,12 @@
+<script>
+    import "../global.css";
+</script>
+
 <style>
     h1 {
-        color: #ffffff;
+        color: var(--primary-color);
+        font-family: PilcrowRounded-Bold;
+        font-size: 2rem;
         margin-bottom: 16px;
     }
     p {

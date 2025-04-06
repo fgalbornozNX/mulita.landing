@@ -12,8 +12,16 @@
 }
 
 h1{
-    color: var(--primary-color);
     margin: 0px;
+    font-size: 2rem;
+    font-family: PilcrowRounded-Bold;
+    color: var(--primary-color);
+}
+
+h2{
+    margin: 0px;
+    font-family: PilcrowRounded-Bold;
+    color: #ffffff;
 }
 
 .aplicacionI, .aplicacionD {
@@ -128,11 +136,6 @@ transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
 
 .aplicacion-info{
     margin-left: 20px;
-}
-
-h2{
-    color: #ffffff;
-    margin: 0px;
 }
 
 p{
