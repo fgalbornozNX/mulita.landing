@@ -19,7 +19,6 @@
 	<div class="cuerpo">
 		<!-- Logo de Mulita App -->
 		<!--<img class="logo" src={imgSrc} alt={imgAlt} />-->
-		<!-- prettier-ignore -->
 		<svg
 			class="logo"
 			id="Capa_1"
@@ -28,7 +27,6 @@
 			viewBox="0 0 1023.81 992.75"
 		>
 			<defs>
-				<!-- prettier-ignore -->
 				<style>
 					.color {
 						fill: var(--text-color);
