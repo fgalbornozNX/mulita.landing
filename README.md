@@ -1,6 +1,6 @@
 # Bienvenidos a [mulita.app](http://mulita.app)
 
-¡Hola! Somos un equipo de dos apasionados desarrolladores trabajando en [mulita.app](http://mulita.app), un sitio web desarrollado con [Svelte](https://svelte.dev). Nuestro objetivo es albergar y mostrar nuestros futuros proyectos, funcionando como un portafolio personal colaborativo. 
+¡Hola! Somos un equipo de dos apasionados desarrolladores trabajando en [mulita.app](http://mulita.app), un sitio web desarrollado con [Svelte](https://svelte.dev). Nuestro objetivo es albergar y mostrar nuestros futuros proyectos, funcionando como un portafolio personal colaborativo.
 
 ## Tecnologías Utilizadas
 
@@ -34,5 +34,4 @@ Si tienes alguna pregunta o simplemente quieres saludar, puedes contactarnos a t
 
 ---
 
-*Este proyecto es de código abierto y está disponible bajo la licencia [MIT](LICENSE).*
-
+_Este proyecto es de código abierto y está disponible bajo la licencia [MIT](LICENSE)._
