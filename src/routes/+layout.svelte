@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
 	import '../global.css';
 
 	let { children } = $props();
 
+	const sections = ['Inicio', 'Aplicaciones', 'Nosotros'];
+	let observer: IntersectionObserver;
 	let activeSection = $state('Inicio'); // Variable para la sección activa
 
 	// Función para cambiar la sección activa
@@ -13,6 +16,38 @@
 			element.scrollIntoView({ behavior: 'smooth' });
 		}
 	}
+
+	onMount(() => {
+		const options = {
+			root: null,
+			rootMargin: '0px',
+			threshold: 0.45 // Se considera "visible" cuando al menos el 45% de la sección está en pantalla
+		};
+
+		observer = new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.isIntersecting) {
+					const id = entry.target.id;
+					if (sections.includes(id)) {
+						activeSection = id;
+					}
+				}
+			}
+		}, options);
+
+		// Observar cada sección
+		for (const id of sections) {
+			const sectionEl = document.getElementById(id);
+			if (sectionEl) {
+				observer.observe(sectionEl);
+			}
+		}
+	});
+
+	onDestroy(() => {
+		if (observer) observer.disconnect();
+	});
+
 </script>
 
 <div class="container">

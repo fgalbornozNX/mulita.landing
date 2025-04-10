@@ -9,9 +9,8 @@
 	// Probando GSAP
 	onMount(() => {
 		var tl = gsap.timeline();
-		tl.to('.logo', { duration: 1.5, y: 35, rotation: 5 })
-			.to('.logo', { duration: 1.5, y: 0, rotation: 0 })
-			.repeat(1);
+		tl.to('.logo', { duration: 1.5, y: 18, rotation: 5 })
+		  .to('.logo', { duration: 1.5, y: 0, rotation: 0 });
 	});
 </script>
 
