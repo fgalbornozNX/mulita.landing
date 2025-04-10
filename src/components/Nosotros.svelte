@@ -6,12 +6,6 @@
 <p>Esta página habla de nosotros</p>
 
 <style>
-	h1 {
-		color: var(--primary-color);
-		font-family: PilcrowRounded-Bold;
-		font-size: 2rem;
-		margin-bottom: 16px;
-	}
 	p {
 		color: #979595;
 		margin-top: 16px;

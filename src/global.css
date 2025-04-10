@@ -13,4 +13,25 @@
 
 	/* Sombras y efectos */
 	--shadow-color: rgba(0, 0, 0, 0.2);
+
+	h1 {
+        margin: 0px;
+        font-size: 2rem;
+        font-family: PilcrowRounded-Bold;
+        color: var(--primary-color);
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    /* Línea decorativa bajo el título */
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: var(--primary-color);
+    }
 }

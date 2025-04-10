@@ -180,27 +180,6 @@
         margin-top: 40px; /* Espacio entre borde superior y título */
     }
     
-    h1 {
-        margin: 0px;
-        font-size: 2rem;
-        font-family: PilcrowRounded-Bold;
-        color: var(--primary-color);
-        position: relative;
-        padding-bottom: 15px;
-    }
-    
-    /* Línea decorativa bajo el título */
-    h1::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background-color: var(--primary-color);
-    }
-    
     h2 {
         margin: 0px;
         font-family: PilcrowRounded-Bold;
@@ -250,10 +229,10 @@
         left: 0;
         right: 0;
         bottom: 0;
-        /* width: 60vw;
-        height: 40vw; */
-		width: 220px;
-		height: 300px;
+        width: 60vw;
+        height: 40vw;
+		/* width: 220px;
+		height: 300px; */
         max-width: 500px;
         max-height: 380px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
