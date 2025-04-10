@@ -64,7 +64,7 @@
         return () => stopAutoRotation();
     });
 
-	function calculateTranslateZ(): string {
+    function calculateTranslateZ(): string {
 		const cardBaseWidth = 250; // tamaño base de cada tarjeta
 		const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
 		let containerWidth = window.innerWidth;
@@ -72,7 +72,7 @@
 		// Ajustar tamaño de tarjeta y spacing según resolución
 		if (containerWidth >= 1600) {
 			containerWidth *= 0.5; // menos separación en pantallas grandes
-		} else if (containerWidth <= 768) {
+		} else if (containerWidth <= 904) {
 			containerWidth *= 0.9; // más cerrado en móviles
 		} else {
 			containerWidth *= 0.6; // valor por defecto
@@ -270,8 +270,6 @@
         bottom: 0;
         width: 60vw;
         height: 40vw;
-		/* width: 220px;
-		height: 300px; */
         max-width: 500px;
         max-height: 380px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
@@ -286,12 +284,6 @@
         overflow: auto;
         backface-visibility: hidden;
     }
-
-	@media (max-width: 768px) {
-		.icon-cards__item {
-			transform: scale(0.85); /* reduce un poco para evitar solapamiento */
-		}
-	}
     
     /* Estilos para el contenido de las tarjetas */
     .aplicacion-container-detalles {
@@ -397,7 +389,7 @@
     }
     
     /* Estilos responsivos */
-    @media (max-width: 768px) {
+    @media (max-width: 904px) {
         .icon-cards {
             width: 80vw;
             height: 60vw;
@@ -408,6 +400,7 @@
             width: 80vw;
             height: 60vw;
             max-height: 450px;
+            transform: scale(0.85); /* reduce un poco para evitar solapamiento */
         }
         
         .aplicacion-container-detalles {
@@ -429,17 +422,14 @@
         }
     }
     
+    
     @media (max-width: 480px) {
-        .icon-cards {
-            width: 90vw;
-            height: 70vw;
-            min-height: 350px;
-        }
-        
+
         .icon-cards__item {
-            width: 90vw;
-            height: 70vw;
-            min-height: 350px;
+            width: 80vw;
+            height: 60vw;
+            font-size: 0.85rem;
+            padding: 0.75rem;
         }
         
         .aplicacion-logo {
@@ -447,31 +437,27 @@
             height: 60px;
         }
         
-        .apps-section {
-            padding: 10px 0;
-        }
-        
         h1 {
             font-size: 1.6rem;
         }
+
+        h2 {
+            font-size: 1.3rem;
+            margin: -12px;
+        }
+
+        p {
+            font-size: 0.75rem;
+        }
+
+        .aplicacion-container-detalles button {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
         
         .titulo {
-            margin-top: 10px; /* Aún más reducido en móviles */
-        }
-        
-        .control-button {
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-        }
-        
-        /* Mejorar navegación en móviles */
-        .carousel-navigation {
-            gap: 10px;
-        }
-        
-        .carousel-indicators {
-            gap: 5px;
+            margin-top: 10px;
         }
     }
+
 </style>
