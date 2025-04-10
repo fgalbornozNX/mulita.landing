@@ -462,9 +462,13 @@
     
     @media (max-width: 480px) {
 
+        .icon-cards {
+            height: 150vw;
+        }
+
         .icon-cards__item {
             width: 80vw;
-            height: 60vw;
+            height: 110vw;
             font-size: 0.85rem;
             padding: 0.75rem;
         }
