@@ -42,6 +42,10 @@
     });
 </script>
 
+<svelte:head>
+    <link rel="preload" href="/fonts/PilcrowRounded-Bold.woff" as="font" type="font/woff" crossorigin="anonymous">
+</svelte:head>
+
 <div class="container">
     <div class="menu">
         <button class:selected={activeSection === 'Inicio'} onclick={() => setActiveSection('Inicio')}>
