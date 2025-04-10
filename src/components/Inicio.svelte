@@ -73,7 +73,7 @@
 	}
 
 	.cuerpo p {
-		font-size: 40px;
+		font-size: 3.5rem;
 	}
 
 	/* Media query para pantallas más grandes */

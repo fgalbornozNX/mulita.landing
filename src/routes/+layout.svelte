@@ -114,5 +114,9 @@
 			min-width: 75px; /* Botones más pequeños */
 			font-size: 0.8rem;
 		}
+
+		.menu button.selected {
+			transform: scale(1.05);
+		}
 	}
 </style>

@@ -4,7 +4,10 @@
 	
     let { apps } = $props();
 
+    let isMobile = $state(false); // Variable para detectar si es móvil
 	let translateZ = $state('500px'); // valor inicial por defecto
+    let touchStartX = $state(0);
+    let touchEndX = $state(0);
     
     // Estado para control del carrusel
     let activeIndex = $state(0);
@@ -80,20 +83,54 @@
 	}
 
 	onMount(() => {
-		// Set initial translateZ
+		isMobile = window.innerWidth <= 768; // Detectar si es móvil
+        
+        // Set initial translateZ
 		translateZ = calculateTranslateZ();
 
 		// Optional: update on resize
 		const handleResize = () => {
+            isMobile = window.innerWidth <= 768; // Detectar si es móvil
 			translateZ = calculateTranslateZ();
 		};
 
 		window.addEventListener('resize', handleResize);
 
+        const contentEl = document.querySelector('.icon-cards__content');
+        if (contentEl) {
+            contentEl.addEventListener('touchstart', handleTouchStart as EventListener);
+            contentEl.addEventListener('touchmove', handleTouchMove as EventListener);
+            contentEl.addEventListener('touchend', handleTouchEnd as EventListener);
+        }
+
 		return () => {
+            if (contentEl) {
+                contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
+                contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
+                contentEl.removeEventListener('touchend', handleTouchEnd);
+            }
 			window.removeEventListener('resize', handleResize);
 		};
 	});
+
+    function handleTouchStart(event: TouchEvent) {
+        touchStartX = event.touches[0].clientX;
+    }
+
+    function handleTouchMove(event: TouchEvent) {
+        touchEndX = event.touches[0].clientX;
+    }
+
+    function handleTouchEnd() {
+        const deltaX = touchEndX - touchStartX;
+        if (Math.abs(deltaX) > 50) {
+            if (deltaX < 0) {
+                nextCard();
+            } else {
+                prevCard();
+            }
+        }
+    }
 
 </script>
 
@@ -132,19 +169,21 @@
                 </div>
             </div>
             
-            <!-- Controles de navegación reposicionados -->
-            <div class="carousel-navigation">
-                <button class="control-button prev" onclick={prevCard} aria-label="Anterior">←</button>
-                <div class="carousel-indicators">
-                    {#each apps as _, i}
-                        <button type="button" 
-                                class="indicator {i === activeIndex ? 'active' : ''}" 
-                                aria-label={`Ir a la aplicación ${i + 1}`} 
-                                onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
-                    {/each}
+            {#if !isMobile}
+                <!-- Controles de navegación reposicionados -->
+                <div class="carousel-navigation">
+                    <button class="control-button prev" onclick={prevCard} aria-label="Anterior">←</button>
+                    <div class="carousel-indicators">
+                        {#each apps as _, i}
+                            <button type="button" 
+                                    class="indicator {i === activeIndex ? 'active' : ''}" 
+                                    aria-label={`Ir a la aplicación ${i + 1}`} 
+                                    onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
+                        {/each}
+                    </div>
+                    <button class="control-button next" onclick={nextCard} aria-label="Siguiente">→</button>
                 </div>
-                <button class="control-button next" onclick={nextCard} aria-label="Siguiente">→</button>
-            </div>
+            {/if}
         </div>
     </div>
 </section>

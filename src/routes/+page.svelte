@@ -23,6 +23,7 @@
 		height: 100%; /* Set the height for the container */
 		width: 100%;
 		overflow-y: scroll; /* Enable vertical scrolling */
+		overflow-x: hidden; /* Disable horizontal scrolling */
 		border: 1px solid black;
 	}
 </style>
