@@ -10,21 +10,110 @@
     let touchEndX = $state(0);
     let clickedPrev = $state(false);
 	let clickedNext = $state(false);
-
     
     // Estado para control del carrusel
     let activeIndex = $state(0);
     let isPaused = $state(false);
     
-    // Función para cambiar a la siguiente tarjeta
+    // Variables para transición fluida
+    let isAnimating = $state(false);
+    let currentRotation = $state(0);
+    let targetRotation = $state(0);
+    
+    // Ángulo por elemento
+    const anglePerItem = 360 / apps.length;
+    
+    // Función para cambiar a la siguiente tarjeta con animación suave
     function nextCard() {
+        if (isAnimating) return;
+        
+        isAnimating = true;
         activeIndex = (activeIndex + 1) % apps.length;
+        
+        // Actualizar rotación objetivo
+        targetRotation -= anglePerItem;
+        
+        // Iniciar animación suave
+        animateRotation();
         pauseCarousel();
     }
     
-    // Función para cambiar a la tarjeta anterior
+    // Función para cambiar a la tarjeta anterior con animación suave
     function prevCard() {
+        if (isAnimating) return;
+        
+        isAnimating = true;
         activeIndex = (activeIndex - 1 + apps.length) % apps.length;
+        
+        // Actualizar rotación objetivo
+        targetRotation += anglePerItem;
+        
+        // Iniciar animación suave
+        animateRotation();
+        pauseCarousel();
+    }
+    
+    // Función para animar la rotación suavemente
+    function animateRotation() {
+        const startTime = performance.now();
+        const startRotation = currentRotation;
+        const rotationDiff = targetRotation - startRotation;
+        const duration = 300; // duración de la animación en ms
+        
+        function step(timestamp: number) {
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Función de easing para suavizar el movimiento
+            const easeProgress = easeInOutCubic(progress);
+            
+            // Calcular rotación actual
+            currentRotation = startRotation + rotationDiff * easeProgress;
+            
+            // Continuar animación si no ha terminado
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                isAnimating = false;
+            }
+        }
+        
+        requestAnimationFrame(step);
+    }
+    
+    // Función de easing para animación más natural
+    function easeInOutCubic(t: number) {
+        return t < 0.5
+            ? 4 * t * t * t
+            : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+    
+    // Función para ir directamente a una tarjeta específica
+    function goToCard(index: number) {
+        if (isAnimating || index === activeIndex) return;
+        
+        isAnimating = true;
+        
+        // Calcular el camino más corto para llegar al índice deseado
+        const currentAngle = -activeIndex * anglePerItem;
+        const targetAngle = -index * anglePerItem;
+        
+        // Determinar si es más rápido ir hacia adelante o hacia atrás
+        let angleDiff = targetAngle - currentAngle;
+        
+        // Ajustar para tomar el camino más corto
+        if (Math.abs(angleDiff) > 180) {
+            angleDiff = angleDiff > 0
+                ? angleDiff - 360
+                : angleDiff + 360;
+        }
+        
+        // Actualizar rotación objetivo
+        targetRotation = currentRotation + angleDiff;
+        activeIndex = index;
+        
+        // Iniciar animación suave
+        animateRotation();
         pauseCarousel();
     }
     
@@ -44,8 +133,8 @@
     function startAutoRotation() {
         if (!intervalId) {
             intervalId = setInterval(() => {
-                if (!isPaused) {
-                    activeIndex = (activeIndex + 1) % apps.length;
+                if (!isPaused && !isAnimating) {
+                    nextCard();
                 }
             }, 3000); // Cambiar cada 3 segundos
         }
@@ -166,7 +255,7 @@
                 <div class="icon-cards__content" 
      				role="region" 
      				aria-label="Carrusel de aplicaciones"
-     				style={`transform: translateZ(-${translateZ}) rotateY(-${activeIndex * (360/apps.length)}deg)`}
+     				style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}
      				onmouseenter={() => isPaused = true}
      				onmouseleave={() => isPaused = false}>
                     {#each apps as app, i}
@@ -197,14 +286,16 @@
                         class:clicked={clickedPrev}
                         onclick={() => animateButton('prev')}
                         onanimationend={() => handleAnimationEnd('prev')}
-                        aria-label="Anterior">←</button>
+                        aria-label="Anterior"
+                        disabled={isAnimating}>←</button>
                 
                     <div class="carousel-indicators">
                         {#each apps as _, i}
                             <button type="button"
                                 class="indicator {i === activeIndex ? 'active' : ''}"
                                 aria-label={`Ir a la aplicación ${i + 1}`}
-                                onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
+                                onclick={() => { goToCard(i); }}
+                                disabled={isAnimating}></button>
                         {/each}
                     </div>
                 
@@ -213,7 +304,8 @@
                         class:clicked={clickedNext}
                         onclick={() => animateButton('next')}
                         onanimationend={() => handleAnimationEnd('next')}
-                        aria-label="Siguiente">→</button>
+                        aria-label="Siguiente"
+                        disabled={isAnimating}>→</button>
                 </div>
             {/if}
         </div>
@@ -290,8 +382,7 @@
         height: 100%;
         transform-origin: center;
         transform-style: preserve-3d;
-        transform: translateZ(-25vw) rotateY(0);
-        transition: transform 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+        transition: transform 0.8s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     }
     
     /* Tarjetas individuales */
@@ -309,7 +400,6 @@
         border-radius: 10px;
         transform-origin: center;
 		transform-style: preserve-3d;
-		transition: transform 0.5s ease;
         background: var(--secondary-background);
         padding: 20px;
         display: flex;
@@ -393,8 +483,13 @@
         z-index: 10;
     }
     
-    .control-button:hover {
+    .control-button:hover:not([disabled]) {
         background: rgba(255, 255, 255, 0.4);
+    }
+    
+    .control-button[disabled] {
+        opacity: 0.5;
+        /* cursor: not-allowed; */
     }
     
     /* Indicadores de posición */
@@ -419,6 +514,11 @@
     
     .indicator.active {
         background: var(--primary-color);
+    }
+    
+    .indicator[disabled] {
+        opacity: 0.5;
+        /* cursor: not-allowed; */
     }
     
     /* Estilos responsivos */
