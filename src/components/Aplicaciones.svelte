@@ -8,6 +8,9 @@
 	let translateZ = $state('500px'); // valor inicial por defecto
     let touchStartX = $state(0);
     let touchEndX = $state(0);
+    let clickedPrev = $state(false);
+	let clickedNext = $state(false);
+
     
     // Estado para control del carrusel
     let activeIndex = $state(0);
@@ -132,6 +135,23 @@
         }
     }
 
+	function animateButton(direction: 'prev' | 'next') {
+		if (direction === 'prev') {
+			clickedPrev = false;
+			requestAnimationFrame(() => clickedPrev = true);
+			prevCard();
+		} else {
+			clickedNext = false;
+			requestAnimationFrame(() => clickedNext = true);
+			nextCard();
+		}
+	}
+
+	function handleAnimationEnd(direction: 'prev' | 'next') {
+		if (direction === 'prev') clickedPrev = false;
+		else clickedNext = false;
+	}
+
 </script>
 
 <section class="apps-section">
@@ -172,16 +192,28 @@
             {#if !isMobile}
                 <!-- Controles de navegación reposicionados -->
                 <div class="carousel-navigation">
-                    <button class="control-button prev" onclick={prevCard} aria-label="Anterior">←</button>
+                    <button
+                        class="control-button prev"
+                        class:clicked={clickedPrev}
+                        onclick={() => animateButton('prev')}
+                        onanimationend={() => handleAnimationEnd('prev')}
+                        aria-label="Anterior">←</button>
+                
                     <div class="carousel-indicators">
                         {#each apps as _, i}
-                            <button type="button" 
-                                    class="indicator {i === activeIndex ? 'active' : ''}" 
-                                    aria-label={`Ir a la aplicación ${i + 1}`} 
-                                    onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
+                            <button type="button"
+                                class="indicator {i === activeIndex ? 'active' : ''}"
+                                aria-label={`Ir a la aplicación ${i + 1}`}
+                                onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
                         {/each}
                     </div>
-                    <button class="control-button next" onclick={nextCard} aria-label="Siguiente">→</button>
+                
+                    <button
+                        class="control-button next"
+                        class:clicked={clickedNext}
+                        onclick={() => animateButton('next')}
+                        onanimationend={() => handleAnimationEnd('next')}
+                        aria-label="Siguiente">→</button>
                 </div>
             {/if}
         </div>
@@ -459,5 +491,22 @@
             margin-top: 10px;
         }
     }
+
+    /* Animación de "jelly" para el botón */
+    /* ================================== */
+    .control-button.clicked {
+        animation: jelly 0.6s ease;
+    }
+
+    @keyframes jelly {
+        from { transform: scale(1, 1); }
+        30% { transform: scale(1.25, 0.75); }
+        40% { transform: scale(0.75, 1.25); }
+        50% { transform: scale(1.15, 0.85); }
+        65% { transform: scale(0.95, 1.05); }
+        75% { transform: scale(1.05, 0.95); }
+        to { transform: scale(1, 1); }
+    }
+    /* ================================== */
 
 </style>
