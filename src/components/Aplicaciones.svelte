@@ -1,6 +1,10 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
     import '../global.css';
+	
     let { apps } = $props();
+
+	let translateZ = $state('500px'); // valor inicial por defecto
     
     // Estado para control del carrusel
     let activeIndex = $state(0);
@@ -56,6 +60,41 @@
         // Limpiar el intervalo cuando el componente se desmonte
         return () => stopAutoRotation();
     });
+
+	function calculateTranslateZ(): string {
+		const cardBaseWidth = 250; // tamaño base de cada tarjeta
+		const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
+		let containerWidth = window.innerWidth;
+
+		// Ajustar tamaño de tarjeta y spacing según resolución
+		if (containerWidth >= 1600) {
+			containerWidth *= 0.5; // menos separación en pantallas grandes
+		} else if (containerWidth <= 768) {
+			containerWidth *= 0.9; // más cerrado en móviles
+		} else {
+			containerWidth *= 0.6; // valor por defecto
+		}
+
+		const radius = containerWidth / (2 * Math.tan(totalAngle));
+		return `${radius}px`;
+	}
+
+	onMount(() => {
+		// Set initial translateZ
+		translateZ = calculateTranslateZ();
+
+		// Optional: update on resize
+		const handleResize = () => {
+			translateZ = calculateTranslateZ();
+		};
+
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	});
+
 </script>
 
 <section class="apps-section">
@@ -68,14 +107,14 @@
             <!-- Carrusel de tarjetas -->
             <div class="icon-cards">
                 <div class="icon-cards__content" 
-                     role="region" 
-                     aria-label="Carrusel de aplicaciones"
-                     style={`transform: translateZ(-35vw) rotateY(${activeIndex * (360/apps.length)}deg)`}
-                     onmouseenter={() => isPaused = true}
-                     onmouseleave={() => isPaused = false}>
+     				role="region" 
+     				aria-label="Carrusel de aplicaciones"
+     				style={`transform: translateZ(-${translateZ}) rotateY(-${activeIndex * (360/apps.length)}deg)`}
+     				onmouseenter={() => isPaused = true}
+     				onmouseleave={() => isPaused = false}>
                     {#each apps as app, i}
                         <div class="icon-cards__item aplicacion-card" 
-                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(25vw)`}>
+                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}>
                             <div class="aplicacion-titulo">
                                 <h2>{app.titulo}</h2>
                             </div>
@@ -211,13 +250,17 @@
         left: 0;
         right: 0;
         bottom: 0;
-        width: 60vw;
-        height: 40vw;
+        /* width: 60vw;
+        height: 40vw; */
+		width: 220px;
+		height: 300px;
         max-width: 500px;
         max-height: 380px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
         border-radius: 10px;
         transform-origin: center;
+		transform-style: preserve-3d;
+		transition: transform 0.5s ease;
         background: var(--secondary-background);
         padding: 20px;
         display: flex;
@@ -225,6 +268,12 @@
         overflow: auto;
         backface-visibility: hidden;
     }
+
+	@media (max-width: 768px) {
+		.icon-cards__item {
+			transform: scale(0.85); /* reduce un poco para evitar solapamiento */
+		}
+	}
     
     /* Estilos para el contenido de las tarjetas */
     .aplicacion-container-detalles {
