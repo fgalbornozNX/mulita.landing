@@ -195,14 +195,14 @@
             contentEl.addEventListener('touchend', handleTouchEnd as EventListener);
         }
 
-		return () => {
-            if (contentEl) {
-                contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
-                contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
-                contentEl.removeEventListener('touchend', handleTouchEnd);
-            }
-			window.removeEventListener('resize', handleResize);
-		};
+        return () => {
+        if (contentEl) {
+            contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
+            contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
+            contentEl.removeEventListener('touchend', handleTouchEnd as EventListener);
+        }
+            window.removeEventListener('resize', handleResize);
+        };
 	});
 
     function handleTouchStart(event: TouchEvent) {
@@ -216,11 +216,7 @@
     function handleTouchEnd() {
         const deltaX = touchEndX - touchStartX;
         if (Math.abs(deltaX) > 50) {
-            if (deltaX < 0) {
-                nextCard();
-            } else {
-                prevCard();
-            }
+            deltaX < 0 ? nextCard() : prevCard();
         }
     }
 
@@ -236,10 +232,9 @@
 		}
 	}
 
-	function handleAnimationEnd(direction: 'prev' | 'next') {
-		if (direction === 'prev') clickedPrev = false;
-		else clickedNext = false;
-	}
+    function handleAnimationEnd(direction: 'prev' | 'next') {
+        direction === 'prev' ? (clickedPrev = false) : (clickedNext = false);
+    }
 
 </script>
 
@@ -255,12 +250,14 @@
                 <div class="icon-cards__content" 
      				role="region" 
      				aria-label="Carrusel de aplicaciones"
-     				style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}
-     				onmouseenter={() => isPaused = true}
-     				onmouseleave={() => isPaused = false}>
+     				style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}>
                     {#each apps as app, i}
                         <div class="icon-cards__item aplicacion-card" 
-                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}>
+                            style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}
+                            onmouseenter={() => isPaused = true}
+                            onmouseleave={() => isPaused = false}
+                            role="button"
+                            tabindex="0">
                             <div class="aplicacion-titulo">
                                 <h2>{app.titulo}</h2>
                             </div>
