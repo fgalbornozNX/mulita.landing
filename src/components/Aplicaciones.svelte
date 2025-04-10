@@ -1,43 +1,144 @@
 <script lang="ts">
     import '../global.css';
     let { apps } = $props();
+    
+    // Estado para control del carrusel
+    let activeIndex = $state(0);
+    let isPaused = $state(false);
+    
+    // Función para cambiar a la siguiente tarjeta
+    function nextCard() {
+        activeIndex = (activeIndex + 1) % apps.length;
+        pauseCarousel();
+    }
+    
+    // Función para cambiar a la tarjeta anterior
+    function prevCard() {
+        activeIndex = (activeIndex - 1 + apps.length) % apps.length;
+        pauseCarousel();
+    }
+    
+    // Función para pausar el carrusel temporalmente
+    function pauseCarousel() {
+        isPaused = true;
+        // Reanuda la animación después de 5 segundos
+        setTimeout(() => {
+            isPaused = false;
+        }, 5000);
+    }
+    
+    // Configurar intervalo de rotación automática
+    let intervalId: number;
+    
+    // Iniciar rotación automática
+    function startAutoRotation() {
+        if (!intervalId) {
+            intervalId = setInterval(() => {
+                if (!isPaused) {
+                    activeIndex = (activeIndex + 1) % apps.length;
+                }
+            }, 3000); // Cambiar cada 3 segundos
+        }
+    }
+    
+    // Detener rotación
+    function stopAutoRotation() {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = 0;
+        }
+    }
+    
+    // Iniciar la rotación al cargar el componente
+    $effect(() => {
+        startAutoRotation();
+        
+        // Limpiar el intervalo cuando el componente se desmonte
+        return () => stopAutoRotation();
+    });
 </script>
 
-<div class="titulo">
-    <h1>Aplicaciones</h1>
-</div>
+<section class="apps-section">
+    <div class="section-content">
+        <div class="titulo">
+            <h1>Aplicaciones</h1>
+        </div>
 
-<div class="carousel-container">
-    <!-- Carrusel de tarjetas -->
-    <div class="icon-cards">
-        <div class="icon-cards__content">
-            {#each apps as app, i}
-                <div class="icon-cards__item aplicacion-card">
-                    <div class="aplicacion-titulo">
-                        <h2>{app.titulo}</h2>
-                    </div>
-                    <div class="aplicacion-container">
-                        <div class="aplicacion-container-detalles">
-                            <img src={app.img} alt={app.alt} class="aplicacion-logo" />
-                            <div class="aplicacion-info">
-                                <p>{app.descripcion}</p>
-                                <button>Saber más</button>
+        <div class="carousel-container">
+            <!-- Carrusel de tarjetas -->
+            <div class="icon-cards">
+                <div class="icon-cards__content" 
+                     role="region" 
+                     aria-label="Carrusel de aplicaciones"
+                     style={`transform: translateZ(-35vw) rotateY(${activeIndex * (360/apps.length)}deg)`}
+                     onmouseenter={() => isPaused = true}
+                     onmouseleave={() => isPaused = false}>
+                    {#each apps as app, i}
+                        <div class="icon-cards__item aplicacion-card" 
+                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(25vw)`}>
+                            <div class="aplicacion-titulo">
+                                <h2>{app.titulo}</h2>
+                            </div>
+                            <div class="aplicacion-container">
+                                <div class="aplicacion-container-detalles">
+                                    <img src={app.img} alt={app.alt} class="aplicacion-logo" />
+                                    <div class="aplicacion-info">
+                                        <p>{app.descripcion}</p>
+                                        <button>Saber más</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {/each}
                 </div>
-            {/each}
+            </div>
+            
+            <!-- Controles de navegación reposicionados -->
+            <div class="carousel-navigation">
+                <button class="control-button prev" onclick={prevCard} aria-label="Anterior">←</button>
+                <div class="carousel-indicators">
+                    {#each apps as _, i}
+                        <button type="button" 
+                                class="indicator {i === activeIndex ? 'active' : ''}" 
+                                aria-label={`Ir a la aplicación ${i + 1}`} 
+                                onclick={() => { activeIndex = i; pauseCarousel(); }}></button>
+                    {/each}
+                </div>
+                <button class="control-button next" onclick={nextCard} aria-label="Siguiente">→</button>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <style>
+    /* Sección de pantalla completa */
+    .apps-section {
+        height: 100vh; /* 100% del alto de la ventana */
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        position: relative;
+    }
+    
+    .section-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 20px 0;
+    }
+    
     .titulo,
     .aplicacion-titulo {
         width: 100%;
         color: var(--primary-color);
         text-align: center;
         margin-bottom: 10px;
+        margin-top: 40px; /* Espacio entre borde superior y título */
     }
     
     h1 {
@@ -45,6 +146,20 @@
         font-size: 2rem;
         font-family: PilcrowRounded-Bold;
         color: var(--primary-color);
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    /* Línea decorativa bajo el título */
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: var(--primary-color);
     }
     
     h2 {
@@ -59,7 +174,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 40px 0;
+        width: 100%;
+        flex: 1;
+        margin-top: 20px; /* Espacio entre título y carrusel */
+        position: relative;
     }
     
     /* Cards Carousel */
@@ -82,8 +200,8 @@
         height: 100%;
         transform-origin: center;
         transform-style: preserve-3d;
-        transform: translateZ(-30vw) rotateY(0);
-        animation: carousel 15s infinite cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        transform: translateZ(-25vw) rotateY(0);
+        transition: transform 1s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     }
     
     /* Tarjetas individuales */
@@ -105,33 +223,7 @@
         display: flex;
         flex-direction: column;
         overflow: auto;
-    }
-    
-    /* Posicionamiento 3D de las tarjetas */
-    .icon-cards__item:nth-child(1) {
-        transform: rotateY(0) translateZ(35vw);
-    }
-    
-    .icon-cards__item:nth-child(2) {
-        transform: rotateY(120deg) translateZ(35vw);
-    }
-    
-    .icon-cards__item:nth-child(3) {
-        transform: rotateY(240deg) translateZ(35vw);
-    }
-    
-    /* Si hay más de 3 tarjetas, las ocultamos hasta que roten */
-    .icon-cards__item:nth-child(n+4) {
-        opacity: 0;
-        visibility: hidden;
-    }
-    
-    /* Animación del carrusel */
-    @keyframes carousel {
-        0%,  17.5%  { transform: translateZ(-35vw) rotateY(0); }
-        27.5%, 45%  { transform: translateZ(-35vw) rotateY(-120deg); }
-        55%, 72.5%  { transform: translateZ(-35vw) rotateY(-240deg); }
-        82.5%, 100% { transform: translateZ(-35vw) rotateY(-360deg); }
+        backface-visibility: hidden;
     }
     
     /* Estilos para el contenido de las tarjetas */
@@ -180,6 +272,63 @@
         margin-top: 0;
     }
     
+    /* Controles de navegación reposicionados */
+    .carousel-navigation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 60px;
+        width: 100%;
+        max-width: 500px;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+    
+    .control-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--primary-color);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background 0.3s;
+        z-index: 10;
+    }
+    
+    .control-button:hover {
+        background: rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Indicadores de posición */
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+    
+    .indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: background 0.3s;
+        padding: 0;
+    }
+    
+    .indicator.active {
+        background: var(--primary-color);
+    }
+    
     /* Estilos responsivos */
     @media (max-width: 768px) {
         .icon-cards {
@@ -203,6 +352,14 @@
         .aplicacion-info {
             margin-left: 0;
         }
+        
+        h1 {
+            font-size: 1.8rem;
+        }
+        
+        .titulo {
+            margin-top: 20px; /* Reducido en pantallas más pequeñas */
+        }
     }
     
     @media (max-width: 480px) {
@@ -221,6 +378,33 @@
         .aplicacion-logo {
             width: 60px;
             height: 60px;
+        }
+        
+        .apps-section {
+            padding: 10px 0;
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+        }
+        
+        .titulo {
+            margin-top: 10px; /* Aún más reducido en móviles */
+        }
+        
+        .control-button {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+        }
+        
+        /* Mejorar navegación en móviles */
+        .carousel-navigation {
+            gap: 10px;
+        }
+        
+        .carousel-indicators {
+            gap: 5px;
         }
     }
 </style>
