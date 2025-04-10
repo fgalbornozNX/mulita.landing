@@ -230,6 +230,7 @@
         justify-content: center;
         box-sizing: border-box;
         position: relative;
+        padding-top: 60px; /* Añadir padding-top para compensar la barra de menú superior */
     }
     
     .section-content {
@@ -248,7 +249,7 @@
         color: var(--primary-color);
         text-align: center;
         margin-bottom: 10px;
-        margin-top: 40px; /* Espacio entre borde superior y título */
+        margin-top: 60px;
     }
     
     h2 {
@@ -450,7 +451,11 @@
         }
         
         .titulo {
-            margin-top: 20px; /* Reducido en pantallas más pequeñas */
+            margin-top: 40px; /* Reducido en pantallas más pequeñas */
+        }
+
+        .apps-section {
+            padding-top: 50px; /* Ajustar en pantallas medianas */
         }
     }
     
@@ -488,7 +493,11 @@
         }
         
         .titulo {
-            margin-top: 10px;
+            margin-top: 30px; /* Ajustar en pantallas pequeñas */
+        }
+
+        .apps-section {
+            padding-top: 40px; /* Ajustar en pantallas pequeñas */
         }
     }
 
