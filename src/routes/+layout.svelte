@@ -74,7 +74,7 @@
             url('/fonts/PilcrowRounded-Bold.woff') format('woff'),
             url('/fonts/PilcrowRounded-Bold.ttf') format('truetype');
         font-weight: 700;
-        font-display: swap;
+        font-display: block;
         font-style: normal;
     }
     

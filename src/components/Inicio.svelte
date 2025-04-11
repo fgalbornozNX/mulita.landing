@@ -3,21 +3,22 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
-	let imgSrc = '/mulita.webp';
-	let imgAlt = 'Logo Mulita App';
-
-	// Probando GSAP
 	onMount(() => {
-		var tl = gsap.timeline();
+		/* PROBAR: Ejecuta después de haber cargado las fuentes
+		document.fonts.onloadingdone = () => {
+
+		}; */
+		
+		let tl = gsap.timeline();
 		tl.to('.logo', { duration: 1.5, y: 18, rotation: 5 })
 		  .to('.logo', { duration: 1.5, y: 0, rotation: 0 });
+
 	});
 </script>
 
 <div class="inicio-section">
 	<div class="cuerpo">
 		<!-- Logo de Mulita App -->
-		<!--<img class="logo" src={imgSrc} alt={imgAlt} />-->
 		<svg
 			class="logo"
 			id="Capa_1"
@@ -49,7 +50,9 @@
 			<path class="color" d="M627.08,839.92c1.58,25.22-8.05,65.65-139.44,65.65-142.23,0-267.89-70.91-343.54-179.33-3.45-4.94.53-11.6,6.52-10.89,11.23,1.32,22.83,1.99,34.71,1.99,47.41,0,102.12-12.74,131.04-29.85,40.4-23.9,47.07-43.02,44.86-51.98-.77-3.12,1.3-5.38,4.62-4.8,76.77,13.44,191.39,93.05,224.35,132.82,25.8,31.12,35.64,56.44,36.89,76.4Z"/>
 			<path class="color" d="M660.27,857.59c-1.47-150.45-37.14-191.77-48.73-232.91-2.62-9.3,6.82-17.36,15.57-13.29,77.24,35.99,140.8,93.4,150.55,180.27,2.04,18.19-72.83,72-100.04,76.61-8.74,1.48-17.27-1.82-17.35-10.68Z"/>
 		</svg>
-		<p>MULITA</p>
+		<div class="titulo">
+			<p>MULITA</p>
+		</div>
 	</div>
 </div>
 
@@ -71,7 +74,7 @@
 		margin-bottom: 0px;
 	}
 
-	.cuerpo p {
+	.titulo P {
 		font-size: 3.5rem;
 	}
 
