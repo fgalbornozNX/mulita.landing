@@ -4,7 +4,9 @@
 	
     let { apps } = $props();
 
-    let rotationInterval = 10000; // Intervalo de rotación del carrusel
+    const carouselRotationInterval  = 3000;
+    const carouselAnimationDuration = 300;
+    const delayAfterSwipe           = 4000;
 
     let isMobile = $state(false); // Variable para detectar si es móvil
 	let translateZ = $state('500px'); // valor inicial por defecto
@@ -61,11 +63,10 @@
         const startTime = performance.now();
         const startRotation = currentRotation;
         const rotationDiff = targetRotation - startRotation;
-        const duration = 300; // duración de la animación en ms
         
         function step(timestamp: number) {
             const elapsed = timestamp - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+            const progress = Math.min(elapsed / carouselAnimationDuration, 1);
             
             // Función de easing para suavizar el movimiento
             const easeProgress = easeInOutCubic(progress);
@@ -85,11 +86,11 @@
     }
 
     // Función para pausar el carrusel temporalmente
-    function pauseCarousel() {
+    function pauseCarousel(delay: number = 1000) {
         isPaused = true;
         setTimeout(() => {
             isPaused = false;
-        }, 1000);
+        }, delay);
     }
     
     // Función de easing para animación más natural
@@ -138,7 +139,7 @@
                 if (!isPaused && !isAnimating) {
                     nextCard();
                 }
-            }, rotationInterval);
+            }, carouselRotationInterval);
         }
     }
     
@@ -211,6 +212,8 @@
         touchStartX = event.touches[0].clientX;
         touchEndX = touchStartX; // Inicializar touchEndX con el mismo valor
         isSwiping = false;
+
+        stopAutoRotation()
     }
 
     function handleTouchMove(event: TouchEvent) {
@@ -222,11 +225,14 @@
         // Solo procesar el swipe si realmente hubo movimiento
         if (isSwiping) {
             const deltaX = touchEndX - touchStartX;
-            console.log(deltaX);
             if (Math.abs(deltaX) > 50) {
                 deltaX < 0 ? nextCard() : prevCard();
             }
         }
+
+        setTimeout(() => {
+            startAutoRotation();
+        }, delayAfterSwipe);
     }
 
 	function animateButton(direction: 'prev' | 'next') {
@@ -261,10 +267,10 @@
      				aria-label="Carrusel de aplicaciones"
      				style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}>
                     {#each apps as app, i}
-                        <div class="icon-cards__item aplicacion-card" 
+                        <div class="icon-cards__item" 
                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}
-                            onmouseenter={() => isPaused = true}
-                            onmouseleave={() => isPaused = false}
+                            onmouseenter={() => i === activeIndex && stopAutoRotation()}
+                            onmouseleave={() => i === activeIndex && startAutoRotation()}
                             role="button"
                             tabindex="0">
                             <div class="aplicacion-titulo">
@@ -292,8 +298,8 @@
                         class:clicked={clickedPrev}
                         onclick={() => animateButton('prev')}
                         onanimationend={() => handleAnimationEnd('prev')}
-                        aria-label="Anterior"
-                        disabled={isAnimating}>←</button>
+                        aria-label="Anterior">←
+                    </button>
                 
                     <div class="carousel-indicators">
                         {#each apps as _, i}
@@ -301,7 +307,7 @@
                                 class="indicator {i === activeIndex ? 'active' : ''}"
                                 aria-label={`Ir a la aplicación ${i + 1}`}
                                 onclick={() => { goToCard(i); }}
-                                disabled={isAnimating}></button>
+                            ></button>
                         {/each}
                     </div>
                 
@@ -310,8 +316,8 @@
                         class:clicked={clickedNext}
                         onclick={() => animateButton('next')}
                         onanimationend={() => handleAnimationEnd('next')}
-                        aria-label="Siguiente"
-                        disabled={isAnimating}>→</button>
+                        aria-label="Siguiente">→
+                    </button>
                 </div>
             {/if}
         </div>
@@ -341,8 +347,7 @@
         padding: 20px 0;
     }
     
-    .titulo,
-    .aplicacion-titulo {
+    .titulo, .aplicacion-titulo {
         width: 100%;
         color: var(--primary-color);
         text-align: center;
@@ -489,14 +494,15 @@
         z-index: 10;
     }
     
+    /*
     .control-button:hover:not([disabled]) {
         background: rgba(255, 255, 255, 0.4);
     }
     
     .control-button[disabled] {
         opacity: 0.5;
-        /* cursor: not-allowed; */
-    }
+        /* cursor: not-allowed; 
+    }*/
     
     /* Indicadores de posición */
     .carousel-indicators {
@@ -522,10 +528,11 @@
         background: var(--primary-color);
     }
     
+    /*
     .indicator[disabled] {
         opacity: 0.5;
-        /* cursor: not-allowed; */
-    }
+        /* cursor: not-allowed; 
+    }*/
     
     /* Estilos responsivos */
     @media (max-width: 904px) {
