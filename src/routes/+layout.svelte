@@ -1,10 +1,13 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
     import '../global.css';
+
     let { children } = $props();
+
     const sections = ['Inicio', 'Aplicaciones', 'Nosotros'];
     let observer: IntersectionObserver;
     let activeSection = $state('Inicio'); // Variable para la sección activa
+
     // Función para cambiar la sección activa
     function setActiveSection(section: string) {
         activeSection = section;
@@ -48,21 +51,9 @@
 
 <div class="container">
     <div class="menu">
-        <button class:selected={activeSection === 'Inicio'} onclick={() => setActiveSection('Inicio')}>
-            Inicio
-        </button>
-        <button
-            class:selected={activeSection === 'Aplicaciones'}
-            onclick={() => setActiveSection('Aplicaciones')}
-        >
-            Aplicaciones
-        </button>
-        <button
-            class:selected={activeSection === 'Nosotros'}
-            onclick={() => setActiveSection('Nosotros')}
-        >
-            Nosotros
-        </button>
+        <button class:selected={activeSection === 'Inicio'}         onclick={() => setActiveSection('Inicio')}>Inicio</button>
+        <button class:selected={activeSection === 'Aplicaciones'}   onclick={() => setActiveSection('Aplicaciones')}>Aplicaciones</button>
+        <button class:selected={activeSection === 'Nosotros'}       onclick={() => setActiveSection('Nosotros')}>Nosotros</button>
     </div>
 </div>
 {@render children()}

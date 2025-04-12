@@ -4,10 +4,13 @@
 	
     let { apps } = $props();
 
+    let rotationInterval = 10000; // Intervalo de rotación del carrusel
+
     let isMobile = $state(false); // Variable para detectar si es móvil
 	let translateZ = $state('500px'); // valor inicial por defecto
     let touchStartX = $state(0);
     let touchEndX = $state(0);
+    let isSwiping = false;
     let clickedPrev = $state(false);
 	let clickedNext = $state(false);
     
@@ -28,7 +31,7 @@
         if (isAnimating) return;
         
         isAnimating = true;
-        activeIndex = (activeIndex + 1) % apps.length;
+        activeIndex = (activeIndex + 1) % apps.length; // 1 % 7 = 1, 7 % 7 = 0  Rango: 0-6
         
         // Actualizar rotación objetivo
         targetRotation -= anglePerItem;
@@ -80,6 +83,14 @@
         
         requestAnimationFrame(step);
     }
+
+    // Función para pausar el carrusel temporalmente
+    function pauseCarousel() {
+        isPaused = true;
+        setTimeout(() => {
+            isPaused = false;
+        }, 1000);
+    }
     
     // Función de easing para animación más natural
     function easeInOutCubic(t: number) {
@@ -117,17 +128,8 @@
         pauseCarousel();
     }
     
-    // Función para pausar el carrusel temporalmente
-    function pauseCarousel() {
-        isPaused = true;
-        // Reanuda la animación después de 5 segundos
-        setTimeout(() => {
-            isPaused = false;
-        }, 5000);
-    }
-    
     // Configurar intervalo de rotación automática
-    let intervalId: number;
+    let intervalId: NodeJS.Timeout | null;
     
     // Iniciar rotación automática
     function startAutoRotation() {
@@ -136,7 +138,7 @@
                 if (!isPaused && !isAnimating) {
                     nextCard();
                 }
-            }, 3000); // Cambiar cada 3 segundos
+            }, rotationInterval);
         }
     }
     
@@ -144,7 +146,7 @@
     function stopAutoRotation() {
         if (intervalId) {
             clearInterval(intervalId);
-            intervalId = 0;
+            intervalId = null;
         }
     }
     
@@ -192,31 +194,38 @@
         if (contentEl) {
             contentEl.addEventListener('touchstart', handleTouchStart as EventListener);
             contentEl.addEventListener('touchmove', handleTouchMove as EventListener);
-            contentEl.addEventListener('touchend', handleTouchEnd as EventListener);
+            contentEl.addEventListener('touchend', handleTouchEnd);
         }
 
         return () => {
         if (contentEl) {
-            contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
-            contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
-            contentEl.removeEventListener('touchend', handleTouchEnd as EventListener);
-        }
+                contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
+                contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
+                contentEl.removeEventListener('touchend', handleTouchEnd);
+            }
             window.removeEventListener('resize', handleResize);
         };
 	});
 
     function handleTouchStart(event: TouchEvent) {
         touchStartX = event.touches[0].clientX;
+        touchEndX = touchStartX; // Inicializar touchEndX con el mismo valor
+        isSwiping = false;
     }
 
     function handleTouchMove(event: TouchEvent) {
         touchEndX = event.touches[0].clientX;
+        isSwiping = true; // Marcar que hubo movimiento
     }
 
     function handleTouchEnd() {
-        const deltaX = touchEndX - touchStartX;
-        if (Math.abs(deltaX) > 50) {
-            deltaX < 0 ? nextCard() : prevCard();
+        // Solo procesar el swipe si realmente hubo movimiento
+        if (isSwiping) {
+            const deltaX = touchEndX - touchStartX;
+            console.log(deltaX);
+            if (Math.abs(deltaX) > 50) {
+                deltaX < 0 ? nextCard() : prevCard();
+            }
         }
     }
 
