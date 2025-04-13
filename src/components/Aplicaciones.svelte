@@ -117,8 +117,20 @@
     });
 
     function calculateTranslateZ(): string {
-        const totalAngle = Math.PI / apps.length;
+        const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
         let containerWidth = window.innerWidth;
+
+        // Ajustar tamaño de tarjeta y spacing según resolución
+        if (containerWidth >= 1920) {
+            containerWidth *= 0.6; // Más separación en pantallas grandes
+        } else if (containerWidth >= 1024) {
+            containerWidth *= 0.6; // Valor por defecto para tablets
+        } else if (containerWidth <= 480) {
+            containerWidth *= 0.9; // Más cerrado en móviles pequeños
+        } else {
+            containerWidth *= 0.8; // Ajuste general
+        }
+
         const radius = containerWidth / (2 * Math.tan(totalAngle));
         return `${radius}px`;
     }
@@ -287,6 +299,10 @@
         color: var(--primary-color);
         text-align: center;
         margin-bottom: 10px;
+        margin-top: 20px;
+    }
+
+    .aplicacion-titulo {
         margin-top: 60px;
     }
     
@@ -309,7 +325,7 @@
     .icon-cards {
         position: relative;
         width: 70vw;
-        height: 100%;
+        height: 80%;
         max-width: 800px;
         margin: 0 auto;
         color: white;
