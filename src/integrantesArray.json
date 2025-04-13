@@ -1,0 +1,20 @@
+[
+	{
+		"nombre": "Fer Gómez",
+		"img": "/Eevee.jpg",
+		"alt": "Eevee",
+		"descripcion": "Persona 1"
+	},
+    {
+		"nombre": "Peti Racedo",
+		"img": "/Eevee.jpg",
+		"alt": "Eevee",
+		"descripcion": "Persona 2"
+    },
+    {
+		"nombre": "Eevee",
+		"img": "/Eevee.jpg",
+		"alt": "Eevee",
+		"descripcion": "Persona 3"
+    }
+]

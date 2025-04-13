@@ -160,21 +160,23 @@
     });
 
     function calculateTranslateZ(): string {
-		const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
-		let containerWidth = window.innerWidth;
+        const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
+        let containerWidth = window.innerWidth;
 
-		// Ajustar tamaño de tarjeta y spacing según resolución
-		if (containerWidth >= 1600) {
-			containerWidth *= 0.5; // menos separación en pantallas grandes
-		} else if (containerWidth <= 904) {
-			containerWidth *= 0.9; // más cerrado en móviles
-		} else {
-			containerWidth *= 0.6; // valor por defecto
-		}
+        // Ajustar tamaño de tarjeta y spacing según resolución
+        if (containerWidth >= 1920) {
+            containerWidth *= 0.7; // Más separación en pantallas grandes
+        } else if (containerWidth >= 1366) {
+            containerWidth *= 0.65; // Ajuste para laptops
+        } else if (containerWidth >= 601) {
+            containerWidth *= 0.8; // Ajuste para tablets
+        } else if (containerWidth <= 600) {
+            containerWidth *= 0.9; // Más cerrado en móviles
+        }
 
-		const radius = containerWidth / (2 * Math.tan(totalAngle));
-		return `${radius}px`;
-	}
+        const radius = containerWidth / (2 * Math.tan(totalAngle));
+        return `${radius}px`;
+    }
 
 	onMount(() => {
 		isMobile = window.innerWidth <= 768; // Detectar si es móvil
@@ -375,13 +377,13 @@
     /* Cards Carousel */
     .icon-cards {
         position: relative;
-        width: 60vw;
-        height: 40vw;
-        max-width: 500px;
-        max-height: 380px;
+        width: 70vw;
+        height: 50vw;
+        max-width: 800px;
+        max-height: 600px;
         margin: 0 auto;
         color: white;
-        perspective: 1000px;
+        perspective: 1200px;
         transform-origin: center;
     }
     
@@ -399,10 +401,10 @@
     .icon-cards__item {
         position: absolute;
         margin: 0 auto;
-        width: 60vw;
-        height: 40vw;
-        max-width: 500px;
-        max-height: 380px;
+        width: 70vw;
+        height: 50vw;
+        max-width: 800px;
+        max-height: 600px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
         border-radius: 10px;
         transform-origin: center;
@@ -490,16 +492,6 @@
         z-index: 10;
     }
     
-    /*
-    .control-button:hover:not([disabled]) {
-        background: rgba(255, 255, 255, 0.4);
-    }
-    
-    .control-button[disabled] {
-        opacity: 0.5;
-        /* cursor: not-allowed; 
-    }*/
-    
     /* Indicadores de posición */
     .carousel-indicators {
         display: flex;
@@ -524,13 +516,118 @@
         background: var(--primary-color);
     }
     
-    /*
-    .indicator[disabled] {
-        opacity: 0.5;
-        /* cursor: not-allowed; 
-    }*/
+    /* Breakpoints para resoluciones de escritorio */
+    @media (min-width: 1920px) {
+        .icon-cards {
+            width: 60vw;
+            height: 40vw;
+        }
+
+        .icon-cards__item {
+            width: 60vw;
+            height: 40vw;
+        }
+    }
+
+    @media (min-width: 1536px) and (max-width: 1919px) {
+        .icon-cards {
+            width: 65vw;
+            height: 45vw;
+        }
+
+        .icon-cards__item {
+            width: 65vw;
+            height: 45vw;
+        }
+    }
     
-    /* Estilos responsivos */
+    @media (min-width: 1366px) and (max-width: 1535px) {
+        .icon-cards {
+            width: 70vw;
+            height: 50vw;
+        }
+
+        .icon-cards__item {
+            width: 70vw;
+            height: 50vw;
+        }
+    }
+
+    @media (min-width: 1280px) and (max-width: 1365px) {
+        .icon-cards {
+            width: 75vw;
+            height: 55vw;
+        }
+
+        .icon-cards__item {
+            width: 75vw;
+            height: 55vw;
+        }
+    }
+
+    @media (min-width: 1440px) and (max-width: 1535px) {
+        .icon-cards {
+            width: 70vw;
+            height: 50vw;
+        }
+
+        .icon-cards__item {
+            width: 70vw;
+            height: 50vw;
+        }
+    }
+
+    /* Breakpoints para tabletas */
+    @media (min-width: 601px) and (max-width: 1280px) {
+        .icon-cards {
+            width: 80vw;
+            height: 60vw;
+        }
+
+        .icon-cards__item {
+            width: 80vw;
+            height: 60vw;
+        }
+    }
+
+    /* Breakpoints para móviles */
+    @media (max-width: 600px) {
+        .icon-cards {
+            width: 90vw;
+            height: 70vw;
+        }
+
+        .icon-cards__item {
+            width: 90vw;
+            height: 70vw;
+        }
+    }
+
+    @media (max-width: 414px) {
+        .icon-cards {
+            width: 95vw;
+            height: 75vw;
+        }
+
+        .icon-cards__item {
+            width: 95vw;
+            height: 75vw;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .icon-cards {
+            width: 100vw;
+            height: 80vw;
+        }
+
+        .icon-cards__item {
+            width: 100vw;
+            height: 80vw;
+        }
+    }  
+
+    /*
     @media (max-width: 904px) {
         .icon-cards {
             width: 80vw;
@@ -542,7 +639,7 @@
             width: 80vw;
             height: 60vw;
             max-height: 450px;
-            transform: scale(0.85); /* reduce un poco para evitar solapamiento */
+            transform: scale(0.85);
         }
         
         .aplicacion-container-detalles {
@@ -560,11 +657,11 @@
         }
         
         .titulo {
-            margin-top: 40px; /* Reducido en pantallas más pequeñas */
+            margin-top: 40px;
         }
 
         .apps-section {
-            padding-top: 50px; /* Ajustar en pantallas medianas */
+            padding-top: 50px;
         }
     }
     
@@ -606,13 +703,13 @@
         }
         
         .titulo {
-            margin-top: 30px; /* Ajustar en pantallas pequeñas */
+            margin-top: 30px;
         }
 
         .apps-section {
-            padding-top: 40px; /* Ajustar en pantallas pequeñas */
+            padding-top: 40px;
         }
-    }
+    }*/
 
     /* Animación de "jelly" para el botón */
     /* ================================== */

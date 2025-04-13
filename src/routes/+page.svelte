@@ -3,12 +3,13 @@
 	import Aplicaciones from '../components/Aplicaciones.svelte';
 	import Nosotros from '../components/Nosotros.svelte';
 	import apps from '../appsArray.json';
+	import integrantes from '../integrantesArray.json';
 </script>
 
 <div class="container">
 	<section id="Inicio"><Inicio /></section>
 	<section id="Aplicaciones"><Aplicaciones {apps} /></section>
-	<section id="Nosotros"><Nosotros /></section>
+	<section id="Nosotros"><Nosotros {integrantes} /></section>
 </div>
 
 <style>
