@@ -4,7 +4,7 @@
     
     let { apps } = $props();
 
-    const carouselRotationInterval  = 99999;
+    const carouselRotationInterval  = 3000;
     const carouselAnimationDuration = 300;
     const delayAfterSwipe           = 4000;
 
