@@ -419,7 +419,6 @@
     
     /* Estilos para el contenido de las tarjetas */
     .aplicacion-container-detalles {
-        display: flex;
         align-items: center;
         justify-content: flex-start;
         gap: 15px;

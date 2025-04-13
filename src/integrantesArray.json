@@ -1,20 +1,20 @@
 [
 	{
 		"nombre": "Fer Gómez",
-		"img": "/Eevee.jpg",
-		"alt": "Eevee",
-		"descripcion": "Persona 1"
+		"img": "/Fer.jpg",
+		"alt": "Fer",
+		"descripcion": "Ingeniero en sistemas de información.<br>Desarrollador fullstack, especialista en desarrollo backend y bases de datos."
 	},
-    {
+	{
 		"nombre": "Peti Racedo",
-		"img": "/Eevee.jpg",
-		"alt": "Eevee",
-		"descripcion": "Persona 2"
+		"img": "/Peti.jpg",
+		"alt": "Peti",
+		"descripcion": "Ingeniera en sistemas de información.<br>Diseñadora de interfaces y experiencia de usuario, desarrolladora frontend."
     },
-    {
+	{
 		"nombre": "Eevee",
 		"img": "/Eevee.jpg",
 		"alt": "Eevee",
-		"descripcion": "Persona 3"
+		"descripcion": "Apoyo emocional. <br> ¡Cui!"
     }
 ]
