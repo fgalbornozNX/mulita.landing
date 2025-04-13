@@ -3,18 +3,18 @@
 		"nombre": "Fer Gómez",
 		"img": "/Fer.jpg",
 		"alt": "Fer",
-		"descripcion": "Ingeniero en sistemas de información.<br>Desarrollador fullstack, especialista en desarrollo backend y bases de datos."
+		"descripcion": "<ul><li>Ingeniero en sistemas de información</li><li>Desarrollador fullstack</li><li>Especialista en desarrollo backend y bases de datos</li></ul>"
 	},
 	{
 		"nombre": "Peti Racedo",
 		"img": "/Peti.jpg",
 		"alt": "Peti",
-		"descripcion": "Ingeniera en sistemas de información.<br>Diseñadora de interfaces y experiencia de usuario, desarrolladora frontend."
+		"descripcion": "<ul><li>Ingeniera en sistemas de información</li><li>Desarrolladora frontend</li><li>Diseñadora de interfaces y experiencia de usuario</li></ul>"
     },
 	{
 		"nombre": "Eevee",
 		"img": "/Eevee.jpg",
 		"alt": "Eevee",
-		"descripcion": "Apoyo emocional. <br> ¡Cui!"
+		"descripcion": "<ul><li>Apoyo emocional</li><li>¡Hace cui cui cui!</li></ul>"
     }
 ]

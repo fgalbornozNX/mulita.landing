@@ -1,64 +1,47 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import '../global.css';
-	
+    
     let { apps } = $props();
 
     const carouselRotationInterval  = 3000;
     const carouselAnimationDuration = 300;
     const delayAfterSwipe           = 4000;
 
-    let isMobile = $state(false); // Variable para detectar si es móvil
-	let translateZ = $state('500px'); // valor inicial por defecto
+    let isMobile = $state(false);
+    let translateZ = $state('500px');
     let touchStartX = $state(0);
     let touchEndX = $state(0);
     let isSwiping = false;
     let clickedPrev = $state(false);
-	let clickedNext = $state(false);
+    let clickedNext = $state(false);
     
-    // Estado para control del carrusel
     let activeIndex = $state(0);
     let isPaused = $state(false);
-    
-    // Variables para transición fluida
     let isAnimating = $state(false);
     let currentRotation = $state(0);
     let targetRotation = $state(0);
     
-    // Ángulo por elemento
     const anglePerItem = 360 / apps.length;
     
-    // Función para cambiar a la siguiente tarjeta con animación suave
     function nextCard() {
         if (isAnimating) return;
-        
         isAnimating = true;
-        activeIndex = (activeIndex + 1) % apps.length; // 1 % 7 = 1, 7 % 7 = 0  Rango: 0-6
-        
-        // Actualizar rotación objetivo
+        activeIndex = (activeIndex + 1) % apps.length;
         targetRotation -= anglePerItem;
-        
-        // Iniciar animación suave
         animateRotation();
         pauseCarousel();
     }
     
-    // Función para cambiar a la tarjeta anterior con animación suave
     function prevCard() {
         if (isAnimating) return;
-        
         isAnimating = true;
         activeIndex = (activeIndex - 1 + apps.length) % apps.length;
-        
-        // Actualizar rotación objetivo
         targetRotation += anglePerItem;
-        
-        // Iniciar animación suave
         animateRotation();
         pauseCarousel();
     }
     
-    // Función para animar la rotación suavemente
     function animateRotation() {
         const startTime = performance.now();
         const startRotation = currentRotation;
@@ -67,14 +50,8 @@
         function step(timestamp: number) {
             const elapsed = timestamp - startTime;
             const progress = Math.min(elapsed / carouselAnimationDuration, 1);
-            
-            // Función de easing para suavizar el movimiento
             const easeProgress = easeInOutCubic(progress);
-            
-            // Calcular rotación actual
             currentRotation = startRotation + rotationDiff * easeProgress;
-            
-            // Continuar animación si no ha terminado
             if (progress < 1) {
                 requestAnimationFrame(step);
             } else {
@@ -85,7 +62,6 @@
         requestAnimationFrame(step);
     }
 
-    // Función para pausar el carrusel temporalmente
     function pauseCarousel(delay: number = 1000) {
         isPaused = true;
         setTimeout(() => {
@@ -93,46 +69,31 @@
         }, delay);
     }
     
-    // Función de easing para animación más natural
     function easeInOutCubic(t: number) {
         return t < 0.5
             ? 4 * t * t * t
             : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
     
-    // Función para ir directamente a una tarjeta específica
     function goToCard(index: number) {
         if (isAnimating || index === activeIndex) return;
-        
         isAnimating = true;
-        
-        // Calcular el camino más corto para llegar al índice deseado
         const currentAngle = -activeIndex * anglePerItem;
         const targetAngle = -index * anglePerItem;
-        
-        // Determinar si es más rápido ir hacia adelante o hacia atrás
         let angleDiff = targetAngle - currentAngle;
-        
-        // Ajustar para tomar el camino más corto
         if (Math.abs(angleDiff) > 180) {
             angleDiff = angleDiff > 0
                 ? angleDiff - 360
                 : angleDiff + 360;
         }
-        
-        // Actualizar rotación objetivo
         targetRotation = currentRotation + angleDiff;
         activeIndex = index;
-        
-        // Iniciar animación suave
         animateRotation();
         pauseCarousel();
     }
     
-    // Configurar intervalo de rotación automática
     let intervalId: NodeJS.Timeout | null;
     
-    // Iniciar rotación automática
     function startAutoRotation() {
         if (!intervalId) {
             intervalId = setInterval(() => {
@@ -143,7 +104,6 @@
         }
     }
     
-    // Detener rotación
     function stopAutoRotation() {
         if (intervalId) {
             clearInterval(intervalId);
@@ -151,46 +111,26 @@
         }
     }
     
-    // Iniciar la rotación al cargar el componente
     $effect(() => {
         startAutoRotation();
-        
-        // Limpiar el intervalo cuando el componente se desmonte
         return () => stopAutoRotation();
     });
 
     function calculateTranslateZ(): string {
-        const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
+        const totalAngle = Math.PI / apps.length;
         let containerWidth = window.innerWidth;
-
-        // Ajustar tamaño de tarjeta y spacing según resolución
-        if (containerWidth >= 1920) {
-            containerWidth *= 0.7; // Más separación en pantallas grandes
-        } else if (containerWidth >= 1366) {
-            containerWidth *= 0.65; // Ajuste para laptops
-        } else if (containerWidth >= 601) {
-            containerWidth *= 0.8; // Ajuste para tablets
-        } else if (containerWidth <= 600) {
-            containerWidth *= 0.9; // Más cerrado en móviles
-        }
-
         const radius = containerWidth / (2 * Math.tan(totalAngle));
         return `${radius}px`;
     }
 
-	onMount(() => {
-		isMobile = window.innerWidth <= 768; // Detectar si es móvil
-        
-        // Set initial translateZ
-		translateZ = calculateTranslateZ();
-
-		// Optional: update on resize
-		const handleResize = () => {
-            isMobile = window.innerWidth <= 768; // Detectar si es móvil
-			translateZ = calculateTranslateZ();
-		};
-
-		window.addEventListener('resize', handleResize);
+    onMount(() => {
+        isMobile = window.innerWidth <= 768;
+        translateZ = calculateTranslateZ();
+        const handleResize = () => {
+            isMobile = window.innerWidth <= 768;
+            translateZ = calculateTranslateZ();
+        };
+        window.addEventListener('resize', handleResize);
 
         const contentEl = document.querySelector('.icon-cards__content');
         if (contentEl) {
@@ -200,53 +140,50 @@
         }
 
         return () => {
-        if (contentEl) {
+            if (contentEl) {
                 contentEl.removeEventListener('touchstart', handleTouchStart as EventListener);
                 contentEl.removeEventListener('touchmove', handleTouchMove as EventListener);
                 contentEl.removeEventListener('touchend', handleTouchEnd);
             }
             window.removeEventListener('resize', handleResize);
         };
-	});
+    });
 
     function handleTouchStart(event: TouchEvent) {
         touchStartX = event.touches[0].clientX;
-        touchEndX = touchStartX; // Inicializar touchEndX con el mismo valor
+        touchEndX = touchStartX;
         isSwiping = false;
-
         stopAutoRotation()
     }
 
     function handleTouchMove(event: TouchEvent) {
         touchEndX = event.touches[0].clientX;
-        isSwiping = true; // Marcar que hubo movimiento
+        isSwiping = true;
     }
 
     function handleTouchEnd() {
-        // Solo procesar el swipe si realmente hubo movimiento
         if (isSwiping) {
             const deltaX = touchEndX - touchStartX;
             if (Math.abs(deltaX) > 50) {
                 deltaX < 0 ? nextCard() : prevCard();
             }
         }
-
         setTimeout(() => {
             startAutoRotation();
         }, delayAfterSwipe);
     }
 
-	function animateButton(direction: 'prev' | 'next') {
-		if (direction === 'prev') {
-			clickedPrev = false;
-			requestAnimationFrame(() => clickedPrev = true);
-			prevCard();
-		} else {
-			clickedNext = false;
-			requestAnimationFrame(() => clickedNext = true);
-			nextCard();
-		}
-	}
+    function animateButton(direction: 'prev' | 'next') {
+        if (direction === 'prev') {
+            clickedPrev = false;
+            requestAnimationFrame(() => clickedPrev = true);
+            prevCard();
+        } else {
+            clickedNext = false;
+            requestAnimationFrame(() => clickedNext = true);
+            nextCard();
+        }
+    }
 
     function handleAnimationEnd(direction: 'prev' | 'next') {
         direction === 'prev' ? (clickedPrev = false) : (clickedNext = false);
@@ -261,12 +198,11 @@
         </div>
 
         <div class="carousel-container">
-            <!-- Carrusel de tarjetas -->
             <div class="icon-cards">
                 <div class="icon-cards__content" 
-     				role="region" 
-     				aria-label="Carrusel de aplicaciones"
-     				style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}>
+                    role="region" 
+                    aria-label="Carrusel de aplicaciones"
+                    style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}>
                     {#each apps as app, i}
                         <div class="icon-cards__item" 
                             style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}
@@ -292,7 +228,6 @@
             </div>
             
             {#if !isMobile}
-                <!-- Controles de navegación reposicionados -->
                 <div class="carousel-navigation">
                     <button
                         class="control-button prev"
@@ -326,16 +261,15 @@
 </section>
 
 <style>
-    /* Sección de pantalla completa */
     .apps-section {
-        height: 100vh; /* 100% del alto de la ventana */
+        height: 100vh;
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
         position: relative;
-        padding-top: 60px; /* Añadir padding-top para compensar la barra de menú superior */
+        padding-top: 60px;
     }
     
     .section-content {
@@ -362,32 +296,27 @@
         color: #ffffff;
     }
     
-    /* Contenedor del carrusel */
     .carousel-container {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
-        flex: 2;/*
-        margin-top: 20px; /* Espacio entre título y carrusel */
+        flex: 2;
         position: relative;
     }
     
-    /* Cards Carousel */
     .icon-cards {
         position: relative;
         width: 70vw;
-        height: 50vw;
+        height: 100%;
         max-width: 800px;
-        max-height: 600px;
         margin: 0 auto;
         color: white;
         perspective: 1200px;
         transform-origin: center;
     }
     
-    /* Elemento que rota con la animación */
     .icon-cards__content {
         position: absolute;
         width: 100%;
@@ -397,27 +326,23 @@
         transition: transform 0.8s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     }
     
-    /* Tarjetas individuales */
     .icon-cards__item {
         position: absolute;
         margin: 0 auto;
         width: 70vw;
-        height: 50vw;
+        height: 100%;
         max-width: 800px;
-        max-height: 600px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
         border-radius: 10px;
         transform-origin: center;
-		transform-style: preserve-3d;
-        background: var(--secondary-background);/*
-        padding: 20px;*/
+        transform-style: preserve-3d;
+        background: var(--secondary-background);
         display: flex;
         flex-direction: column;
         overflow: auto;
         backface-visibility: hidden;
     }
     
-    /* Estilos para el contenido de las tarjetas */
     .aplicacion-container-detalles {
         align-items: center;
         justify-content: flex-start;
@@ -462,7 +387,6 @@
         margin-top: 0;
     }
     
-    /* Controles de navegación reposicionados */
     .carousel-navigation {
         display: flex;
         align-items: center;
@@ -491,7 +415,6 @@
         z-index: 10;
     }
     
-    /* Indicadores de posición */
     .carousel-indicators {
         display: flex;
         justify-content: center;
@@ -515,198 +438,14 @@
         background: var(--primary-color);
     }
     
-    /* Breakpoints para resoluciones de escritorio */
-    @media (min-width: 1920px) {
-        .icon-cards {
-            width: 60vw;
-            height: 40vw;
-        }
-
-        .icon-cards__item {
-            width: 60vw;
-            height: 40vw;
-        }
-    }
-
-    @media (min-width: 1536px) and (max-width: 1919px) {
-        .icon-cards {
-            width: 65vw;
-            height: 45vw;
-        }
-
-        .icon-cards__item {
-            width: 65vw;
-            height: 45vw;
-        }
-    }
-    
-    @media (min-width: 1366px) and (max-width: 1535px) {
-        .icon-cards {
-            width: 70vw;
-            height: 50vw;
-        }
-
-        .icon-cards__item {
-            width: 70vw;
-            height: 50vw;
-        }
-    }
-
-    @media (min-width: 1280px) and (max-width: 1365px) {
-        .icon-cards {
-            width: 75vw;
-            height: 55vw;
-        }
-
-        .icon-cards__item {
-            width: 75vw;
-            height: 55vw;
-        }
-    }
-
-    @media (min-width: 1440px) and (max-width: 1535px) {
-        .icon-cards {
-            width: 70vw;
-            height: 50vw;
-        }
-
-        .icon-cards__item {
-            width: 70vw;
-            height: 50vw;
-        }
-    }
-
-    /* Breakpoints para tabletas */
-    @media (min-width: 601px) and (max-width: 1280px) {
-        .icon-cards {
-            width: 80vw;
-            height: 60vw;
-        }
-
-        .icon-cards__item {
-            width: 80vw;
-            height: 60vw;
-        }
-    }
-
-    /* Breakpoints para móviles */
     @media (max-width: 600px) {
         .icon-cards {
             width: 90vw;
-            height: 70vw;
         }
 
         .icon-cards__item {
             width: 90vw;
-            height: 70vw;
         }
-    }
-
-    @media (max-width: 414px) {
-        .icon-cards {
-            width: 95vw;
-            height: 75vw;
-        }
-
-        .icon-cards__item {
-            width: 95vw;
-            height: 75vw;
-        }
-    }
-
-    @media (max-width: 360px) {
-        .icon-cards {
-            width: 100vw;
-            height: 80vw;
-        }
-
-        .icon-cards__item {
-            width: 100vw;
-            height: 80vw;
-        }
-    }  
-
-    /* Desde acá estaba comentado -- probando */
-
-    @media (max-width: 904px) {
-        .icon-cards {
-            width: 80vw;
-            height: 60vw;
-            max-height: 450px;
-        }
-        
-        .icon-cards__item {
-            width: 80vw;
-            height: 60vw;
-            max-height: 450px;
-            transform: scale(0.85);
-        }
-        
-        .aplicacion-container-detalles {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .aplicacion-info {
-            margin-left: 0;
-        }
-        
-        .titulo {
-            margin-top: 40px;
-        }
-
-        .apps-section {
-            padding-top: 50px;
-        }
-    }
-    
-    
-    @media (max-width: 480px) {
-
-        .icon-cards {
-            height: 150vw;
-        }
-
-        .icon-cards__item {
-            width: 80vw;
-            height: 110vw;
-            font-size: 0.85rem;
-            padding: 0.75rem;
-        }
-        
-        .aplicacion-logo {
-            width: 60px;
-            height: 60px;
-        }
-
-        h2 {
-            font-size: 1.3rem;
-            margin: -12px;
-        }
-
-        p {
-            font-size: 0.75rem;
-        }
-
-        .aplicacion-container-detalles button {
-            padding: 8px 16px;
-            font-size: 0.8rem;
-        }
-        
-        .titulo {
-            margin-top: 30px;
-        }
-
-        .apps-section {
-            padding-top: 40px;
-        }
-    }
-
-    /* Animación de "jelly" para el botón */
-    /* ================================== */
-    .control-button.clicked {
-        animation: jelly 0.6s ease;
     }
 
     @keyframes jelly {
@@ -718,6 +457,8 @@
         75% { transform: scale(1.05, 0.95); }
         to { transform: scale(1, 1); }
     }
-    /* ================================== */
 
+    .control-button.clicked {
+        animation: jelly 0.6s ease;
+    }
 </style>
