@@ -626,7 +626,8 @@
         }
     }  
 
-    /*
+    /* Desde acá estaba comentado -- probando */
+
     @media (max-width: 904px) {
         .icon-cards {
             width: 80vw;
@@ -649,10 +650,6 @@
         
         .aplicacion-info {
             margin-left: 0;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
         }
         
         .titulo {
@@ -682,10 +679,6 @@
             width: 60px;
             height: 60px;
         }
-        
-        h1 {
-            font-size: 1.6rem;
-        }
 
         h2 {
             font-size: 1.3rem;
@@ -708,7 +701,7 @@
         .apps-section {
             padding-top: 40px;
         }
-    }*/
+    }
 
     /* Animación de "jelly" para el botón */
     /* ================================== */

@@ -129,7 +129,7 @@
         .menu button {
             flex: 1; /* Hace que cada botón ocupe una parte proporcional del espacio disponible */
             min-width: unset; /* Elimina el ancho mínimo fijo */
-            font-size: clamp(0.8rem, 3vw, 1rem); /* Tamaño de texto adaptable */
+            font-size: clamp(1.1rem, 3vw, 1.4rem); /* Tamaño de texto adaptable */
             padding: 8px 5px;
         }
     }
@@ -141,7 +141,7 @@
         }
         
         .menu button {
-            font-size: clamp(0.7rem, 4vw, 1rem); /* Texto adaptable pero un poco más pequeño */
+            font-size: clamp(0.9rem, 4vw, 1.4rem); /* Texto adaptable pero un poco más pequeño */
             padding: 8px 2px;
         }
         
