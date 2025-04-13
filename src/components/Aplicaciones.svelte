@@ -4,7 +4,7 @@
     
     let { apps } = $props();
 
-    const carouselRotationInterval  = 3000;
+    const carouselRotationInterval  = 99999;
     const carouselAnimationDuration = 300;
     const delayAfterSwipe           = 4000;
 
@@ -116,19 +116,22 @@
         return () => stopAutoRotation();
     });
 
+    // Función para calcular el valor de translateZ según la resolución de pantalla
     function calculateTranslateZ(): string {
-        const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
+        const totalAngle = Math.PI / apps.length; // Más tarjetas = más cerrado
         let containerWidth = window.innerWidth;
 
         // Ajustar tamaño de tarjeta y spacing según resolución
         if (containerWidth >= 1920) {
             containerWidth *= 0.6; // Más separación en pantallas grandes
+        } else if (containerWidth >= 1366) {
+            containerWidth *= 0.65; // Ajuste para laptops
         } else if (containerWidth >= 1024) {
-            containerWidth *= 0.6; // Valor por defecto para tablets
-        } else if (containerWidth <= 480) {
-            containerWidth *= 0.9; // Más cerrado en móviles pequeños
+            containerWidth *= 0.7; // Ajuste para tablets grandes
+        } else if (containerWidth >= 768) {
+            containerWidth *= 0.8; // Ajuste para tablets pequeñas
         } else {
-            containerWidth *= 0.8; // Ajuste general
+            containerWidth *= 0.9; // Más cerrado en móviles
         }
 
         const radius = containerWidth / (2 * Math.tan(totalAngle));
@@ -222,17 +225,11 @@
                             onmouseleave={() => i === activeIndex && startAutoRotation()}
                             role="button"
                             tabindex="0">
-                            <div class="aplicacion-titulo">
-                                <h2>{app.titulo}</h2>
-                            </div>
-                            <div class="aplicacion-container">
-                                <div class="aplicacion-container-detalles">
-                                    <img src={app.img} alt={app.alt} class="aplicacion-logo" />
-                                    <div class="aplicacion-info">
-                                        <p>{app.descripcion}</p>
-                                        <button>Saber más</button>
-                                    </div>
-                                </div>
+                            <div class="icon-cards__item_centrar">
+                                <h2 class="aplicacion-titulo">{app.titulo}</h2>
+                                <img class="aplicacion-logo" src={app.img} alt={app.alt}  />
+                                <p class="aplicacion-descripcion">{app.descripcion}</p>
+                                <button class="aplicacion-button">Saber más</button>
                             </div>
                         </div>
                     {/each}
@@ -294,38 +291,19 @@
         padding: 20px 0;
     }
     
-    .titulo, .aplicacion-titulo {
+    .titulo {
         width: 100%;
         color: var(--primary-color);
         text-align: center;
         margin-bottom: 10px;
         margin-top: 20px;
     }
-
-    .aplicacion-titulo {
-        margin-top: 60px;
-    }
-    
-    h2 {
-        margin: 0px;
-        font-family: PilcrowRounded-Bold;
-        color: #ffffff;
-    }
-    
-    .carousel-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        flex: 2;
-        position: relative;
-    }
     
     .icon-cards {
         position: relative;
         width: 70vw;
-        height: 80%;
+        height: 50vw;
+        max-height: 600px;
         max-width: 800px;
         margin: 0 auto;
         color: white;
@@ -344,9 +322,11 @@
     
     .icon-cards__item {
         position: absolute;
+        height: 50vw;
+        max-height: 600px;
+        padding: 20px;
         margin: 0 auto;
         width: 70vw;
-        height: 100%;
         max-width: 800px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
         border-radius: 10px;
@@ -358,20 +338,35 @@
         overflow: auto;
         backface-visibility: hidden;
     }
-    
-    .aplicacion-container-detalles {
+
+    .icon-cards__item_centrar{
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        gap: 15px;
-        margin-top: 15px;
+        justify-content: center;
+        height: 100%;
     }
     
-    .aplicacion-container {
-        text-align: center;
-        margin-top: 10px;
+    .aplicacion-titulo {
+        margin: 0px;
+        font-family: PilcrowRounded-Bold;
+        color: #ffffff;
     }
     
-    .aplicacion-container-detalles button {
+    .aplicacion-logo {
+        width: 80px;
+        height: 80px;
+        margin: 20px;
+    }
+
+    
+    .aplicacion-descripcion {
+        color: #979595;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .aplicacion-button {
         background: var(--primary-color);
         color: #343233;
         border: none;
@@ -383,24 +378,20 @@
             background 0.3s ease-in-out,
             transform 0.2s ease-in-out;
     }
-    
-    .aplicacion-container-detalles button:hover {
+
+    .aplicacion-button:hover {
         background: var(--primary-color);
         transform: scale(1.05);
     }
-    
-    .aplicacion-logo {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .aplicacion-info {
-        flex: 1;
-    }
-    
-    p {
-        color: #979595;
-        margin-top: 0;
+
+    .carousel-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex: 2;
+        position: relative;
     }
     
     .carousel-navigation {
@@ -453,16 +444,9 @@
     .indicator.active {
         background: var(--primary-color);
     }
-    
-    @media (max-width: 600px) {
-        .icon-cards {
-            width: 90vw;
-        }
 
-        .icon-cards__item {
-            width: 90vw;
-        }
-    }
+    /* Breakpoints para resoluciones pequeñas */
+
 
     @keyframes jelly {
         from { transform: scale(1, 1); }
