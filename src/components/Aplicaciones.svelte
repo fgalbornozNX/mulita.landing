@@ -160,7 +160,6 @@
     });
 
     function calculateTranslateZ(): string {
-		const cardBaseWidth = 250; // tamaño base de cada tarjeta
 		const totalAngle = Math.PI / apps.length; // más tarjetas = más cerrado
 		let containerWidth = window.innerWidth;
 
@@ -368,7 +367,7 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        flex: 1;
+        flex: 2;/*
         margin-top: 20px; /* Espacio entre título y carrusel */
         position: relative;
     }
@@ -399,10 +398,7 @@
     /* Tarjetas individuales */
     .icon-cards__item {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        margin: 0 auto;
         width: 60vw;
         height: 40vw;
         max-width: 500px;
@@ -411,8 +407,8 @@
         border-radius: 10px;
         transform-origin: center;
 		transform-style: preserve-3d;
-        background: var(--secondary-background);
-        padding: 20px;
+        background: var(--secondary-background);/*
+        padding: 20px;*/
         display: flex;
         flex-direction: column;
         overflow: auto;
