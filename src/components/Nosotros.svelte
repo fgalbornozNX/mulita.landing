@@ -27,7 +27,7 @@
         <h1>Nosotros</h1>
     </div>
    
-    <div class="carousel-container">
+    <div class="cards-container">
         <div class="icon-cards">
             {#each integrantes as integrante, i}
                 <button class="icon-cards_item"
@@ -60,10 +60,11 @@
 		font-family: PilcrowRounded-Bold;
 	}
 
-    .carousel-container {
+    .cards-container {
         width: 100%;
         display: flex;
         justify-content: center;
+		margin-bottom: 30px;
     }
     
     .icon-cards {
@@ -73,6 +74,10 @@
         max-width: 1200px;
         margin: 0 auto;
     }
+
+	.icon-cards button {
+		background-color: #c1e6d1;
+	}
     
     .icon-cards_item {
         width: 300px;
