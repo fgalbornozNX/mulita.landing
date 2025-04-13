@@ -120,29 +120,33 @@
     /* Estilos para pantallas pequeñas */
     @media (max-width: 768px) {
         .menu {
-            flex-wrap: wrap; /* Permitir que los botones bajen si no entran */
+            flex-direction: row;
+            justify-content: center; /* Centrar los botones horizontalmente */
             padding: 10px;
+            width: 100%;
         }
         
         .menu button {
-            min-width: 100px; /* Botones más pequeños */
-            font-size: 1rem;
+            flex: 1; /* Hace que cada botón ocupe una parte proporcional del espacio disponible */
+            min-width: unset; /* Elimina el ancho mínimo fijo */
+            font-size: clamp(0.8rem, 3vw, 1rem); /* Tamaño de texto adaptable */
+            padding: 8px 5px;
         }
     }
-    
-    @media (max-width: 370px) {
+
+    @media (max-width: 480px) {
         .menu {
-            flex-wrap: nowrap; /* Permitir que los botones bajen si no entran */
-            padding: 1px;
+            justify-content: space-between; /* Distribuye los botones uniformemente */
+            padding: 5px 10px;
         }
         
         .menu button {
-            min-width: 75px; /* Botones más pequeños */
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 4vw, 1rem); /* Texto adaptable pero un poco más pequeño */
+            padding: 8px 2px;
         }
         
         .menu button.selected {
-            transform: scale(1.05);
+            transform: scale(1.05); /* Escala ligeramente reducida */
         }
     }
 </style>
