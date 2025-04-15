@@ -4,7 +4,7 @@
     
     let { apps } = $props();
 
-    const carouselRotationInterval  = 99999;
+    const carouselRotationInterval  = 3000;
     const carouselAnimationDuration = 300;
     const delayAfterSwipe           = 4000;
 
@@ -337,7 +337,7 @@
     }
     
     .icon-cards__item {
-        position: relative;
+        position: absolute;
         padding: 20px;
         margin: 0;
         max-width: 800px;
@@ -345,6 +345,7 @@
         border-radius: 10px;
         transform-origin: center;
         transform-style: preserve-3d;
+        transform: translate(-50%, -50%) rotateY(0deg) translateZ(500px); /* Ajusta el valor de translateZ dinámicamente */
         background: var(--secondary-background);
         display: flex;
         flex-direction: column;
