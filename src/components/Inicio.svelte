@@ -16,13 +16,13 @@
 	});
 </script>
 
-<div class="inicio-section">
+<section class="inicio-section">
 	<div class="cuerpo">
 		<!-- Logo de Mulita App -->
 		<svg
 			class="logo"
-			id="Capa_1"
-			data-name="Capa 1"
+			id="mulita_logo"
+			data-name="mulita_logo"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 1023.81 992.75"
 		>
@@ -50,32 +50,37 @@
 			<path class="color" d="M627.08,839.92c1.58,25.22-8.05,65.65-139.44,65.65-142.23,0-267.89-70.91-343.54-179.33-3.45-4.94.53-11.6,6.52-10.89,11.23,1.32,22.83,1.99,34.71,1.99,47.41,0,102.12-12.74,131.04-29.85,40.4-23.9,47.07-43.02,44.86-51.98-.77-3.12,1.3-5.38,4.62-4.8,76.77,13.44,191.39,93.05,224.35,132.82,25.8,31.12,35.64,56.44,36.89,76.4Z"/>
 			<path class="color" d="M660.27,857.59c-1.47-150.45-37.14-191.77-48.73-232.91-2.62-9.3,6.82-17.36,15.57-13.29,77.24,35.99,140.8,93.4,150.55,180.27,2.04,18.19-72.83,72-100.04,76.61-8.74,1.48-17.27-1.82-17.35-10.68Z"/>
 		</svg>
-		<div class="titulo">
-			<p>MULITA</p>
-		</div>
+		<div class="titulo">MULITA</div>
 	</div>
-</div>
+</section>
 
 <style>
+	/* Estilo para la sección Inicio para no quedar tapada por el menú */
+	.inicio-section {
+		width: 100%;
+		height: 100%;
+		display: grid;
+		align-items: center;
+	}
+
 	/* Estilo del logo y el título */
 	.cuerpo {
+		margin-top: max(10vh, 45px);
+		height: 90vh;
 		font-family: PilcrowRounded-Bold;
-		font-size: 3rem;
-		/* font-weight: bold; */
+		font-size: clamp(0.8rem, min(12vw, 8vh), 3.5rem); /* tamaño del título adaptable al ancho y alto */
 		color: var(--text-color);
-		/* margin-bottom: 2rem; /* Espacio adicional para que el título no quede tapado */
+		align-content: center;
 	}
 
 	.logo {
-		width: 55%; /* Ajusta el tamaño en función del 60% del ancho de la pantalla */
-		max-width: 400px; /* Limita el tamaño máximo */
+		width: auto;
 		height: auto;
+		max-width: 55vh; /* El ancho, como máximo es X proporción del alto */
+		max-height: 60vh; /* Importante: El alto no ocupa más del 60% de la pantalla */
 		border-radius: 25%;
-		margin-bottom: 0px;
-	}
-
-	.titulo P {
-		font-size: 3.5rem;
+		margin-bottom: 3vh;
+		margin-top: 3vh;
 	}
 
 	/* Media query para pantallas más grandes */
@@ -90,12 +95,5 @@
 		.logo {
 			width: 80%; /* Logo más grande en pantallas pequeñas */
 		}
-	}
-
-	/* Estilo para la sección Inicio para no quedar tapada por el menú */
-	.inicio-section {
-		height: 100vh; /* Altura completa de la ventana */
-		display: grid;
-		align-items: center;
 	}
 </style>

@@ -13,18 +13,12 @@
 </div>
 
 <style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
 	.container {
 		text-align: center;
 		height: 100%; /* Set the height for the container */
 		width: 100%;
 		overflow-y: scroll; /* Enable vertical scrolling */
 		overflow-x: hidden; /* Disable horizontal scrolling */
-		border: 1px solid black;
+		box-sizing: border-box;
 	}
 </style>

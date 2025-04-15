@@ -4,23 +4,23 @@
     
     let { apps } = $props();
 
-    const carouselRotationInterval  = 3000;
+    const carouselRotationInterval  = 99999;
     const carouselAnimationDuration = 300;
     const delayAfterSwipe           = 4000;
 
     let isMobile = $state(false);
     let translateZ = $state('500px');
-    let touchStartX = $state(0);
-    let touchEndX = $state(0);
+    let touchStartX = 0;
+    let touchEndX = 0;
     let isSwiping = false;
     let clickedPrev = $state(false);
     let clickedNext = $state(false);
     
     let activeIndex = $state(0);
-    let isPaused = $state(false);
-    let isAnimating = $state(false);
+    let isPaused = false;
+    let isAnimating = false;
     let currentRotation = $state(0);
-    let targetRotation = $state(0);
+    let targetRotation = 0;
     
     const anglePerItem = 360 / apps.length;
     
@@ -139,11 +139,11 @@
         } else if (containerWidth >= 480) {
             widthFactor = 0.8; // Móviles grandes
         } else {
-            widthFactor = 0.85; // Móviles pequeños
+            widthFactor = 0.9; // Móviles pequeños
         }
         
         // Ajuste adicional basado en la relación de aspecto
-        if (aspectRatio < 1) { // Pantallas altas (móvil en vertical)
+        if (aspectRatio < 0.6) { // Pantallas altas (móvil en vertical)
             widthFactor *= 1.2;
         }
         
@@ -222,11 +222,9 @@
 
 </script>
 
-<section class="apps-section">
-    <div class="section-content">
-        <div class="titulo">
-            <h1>Aplicaciones</h1>
-        </div>
+<section class="aplicaciones-section">
+    <div class="cuerpo">
+        <h1>Aplicaciones</h1>
 
         <div class="carousel-container">
             <div class="icon-cards">
@@ -236,17 +234,17 @@
                     style={`transform: translateZ(-${translateZ}) rotateY(${currentRotation}deg)`}>
                     {#each apps as app, i}
                         <div class="icon-cards__item" 
-                            style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}
-                            onmouseenter={() => i === activeIndex && stopAutoRotation()}
-                            onmouseleave={() => i === activeIndex && startAutoRotation()}
-                            role="button"
-                            tabindex="0">
-                            <div class="icon-cards__item_centrar">
-                                <h2 class="aplicacion-titulo">{app.titulo}</h2>
-                                <img class="aplicacion-logo" src={app.img} alt={app.alt}  />
-                                <p class="aplicacion-descripcion">{app.descripcion}</p>
-                                <button class="aplicacion-button">Saber más</button>
-                            </div>
+                        style={`transform: rotateY(${i * (360/apps.length)}deg) translateZ(${translateZ})`}
+                        onmouseenter={() => i === activeIndex && stopAutoRotation()}
+                        onmouseleave={() => i === activeIndex && startAutoRotation()}
+                        role="button"
+                        tabindex="0">
+                        <div class="icon-cards__item_centrar">
+                            <h2 class="aplicacion-titulo">{app.titulo}</h2>
+                            <img class="aplicacion-logo" src={app.img} alt={app.alt}  />
+                            <p class="aplicacion-descripcion">{app.descripcion}</p>
+                            <button class="aplicacion-button">Saber más</button>
+                        </div> <!-- #1 -->
                         </div>
                     {/each}
                 </div>
@@ -298,63 +296,50 @@
 </section>
 
 <style>
-    .apps-section {
-        height: 100vh;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        position: relative;
-        padding-top: 60px;
-    }
-    
-    .section-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    .aplicaciones-section {
         width: 100%;
         height: 100%;
-        padding: 20px 0;
+        display: grid;
+		align-items: center;
     }
     
-    .titulo {
-        width: 100%;
-        color: var(--primary-color);
-        text-align: center;
-        margin-bottom: 10px;
-        margin-top: 20px;
+    .cuerpo {
+        margin-top: max(10vh, 45px);
+		height: 90vh;
+        align-content: start;
+    }
+
+    .carousel-container {
+        width: 100vw;
+        height: 70vh;
+        position: relative;
     }
     
     .icon-cards {
         position: relative;
-        width: 70vw;
-        height: 50vw;
-        max-height: 600px;
+        margin-top: 8vh;
+        width: 90vw;
+        height: 65vh;
+        left: 50%;
+        transform: translateX(-50%);
         max-width: 800px;
-        margin: 0 auto;
-        color: white;
-        perspective: 1200px;
+        perspective: 800px;
         transform-origin: center;
+        justify-content: center;
     }
     
     .icon-cards__content {
-        position: absolute;
+        position: relative;
         width: 100%;
-        height: 100%;
         transform-origin: center;
         transform-style: preserve-3d;
-        transition: transform 0.8s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+        transition: transform 1.2s cubic-bezier(0.455, 0.03, 0.515, 0.955);
     }
     
     .icon-cards__item {
-        position: absolute;
-        height: 50vw;
-        max-height: 600px;
+        position: relative;
         padding: 20px;
-        margin: 0 auto;
-        width: 70vw;
+        margin: 0;
         max-width: 800px;
         box-shadow: 0 5px 20px rgba(0,0,0,.1);
         border-radius: 10px;
@@ -382,8 +367,9 @@
     }
     
     .aplicacion-logo {
+        position: relative;
         width: 80px;
-        height: 80px;
+        height: 20%;
         margin: 20px;
     }
 
@@ -412,23 +398,12 @@
         background: var(--primary-color);
         transform: scale(1.05);
     }
-
-    .carousel-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        flex: 2;
-        position: relative;
-    }
     
     .carousel-navigation {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 20px;
-        margin-top: 60px;
         width: 100%;
         max-width: 500px;
         padding: 0 20px;
@@ -450,17 +425,15 @@
         transition: background 0.3s;
         z-index: 10;
     }
-    
+
     .carousel-indicators {
+        position: absolute;
+        bottom: 10px;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-content: center;
+        width: 100%;
         gap: 10px;
-        flex: 1;
-    }
-    
-    .mobile-indicators {
-        margin-top: 40px;
     }
     
     .indicator {
@@ -492,305 +465,5 @@
         animation: jelly 0.6s ease;
     }
     
-    /* Media queries para responsive */
-    
-    /* Pantallas extra grandes (desktop) */
-    @media (min-width: 1920px) {
-        .icon-cards {
-            width: 60vw;
-            height: 40vw;
-        }
-        
-        .icon-cards__item {
-            width: 60vw;
-            height: 40vw;
-            padding: 30px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 2.5rem;
-        }
-        
-        .aplicacion-logo {
-            width: 120px;
-            height: 120px;
-            margin: 30px;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 1.2rem;
-            max-width: 70%;
-            margin-bottom: 30px;
-        }
-        
-        .aplicacion-button {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-        }
-    }
-    
-    /* Pantallas grandes (laptops/desktops) */
-    @media (min-width: 1366px) and (max-width: 1919px) {
-        .icon-cards {
-            width: 65vw;
-            height: 45vw;
-        }
-        
-        .icon-cards__item {
-            width: 65vw;
-            height: 45vw;
-            padding: 25px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 2.2rem;
-        }
-        
-        .aplicacion-logo {
-            width: 100px;
-            height: 100px;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 1.1rem;
-            max-width: 75%;
-        }
-    }
-    
-    /* Tablets y laptops pequeñas */
-    @media (min-width: 1024px) and (max-width: 1365px) {
-        .icon-cards {
-            width: 70vw;
-            height: 48vw;
-        }
-        
-        .icon-cards__item {
-            width: 70vw;
-            height: 48vw;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 2rem;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 1rem;
-            max-width: 80%;
-        }
-    }
-    
-    /* Tablets */
-    @media (min-width: 768px) and (max-width: 1023px) {
-        .apps-section {
-            padding-top: 40px;
-        }
-        
-        .icon-cards {
-            width: 75vw;
-            height: 55vw;
-        }
-        
-        .icon-cards__item {
-            width: 75vw;
-            height: 55vw;
-            padding: 15px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 1.8rem;
-        }
-        
-        .aplicacion-logo {
-            width: 70px;
-            height: 70px;
-            margin: 15px;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 0.95rem;
-            max-width: 85%;
-            margin-bottom: 15px;
-        }
-        
-        .carousel-navigation {
-            margin-top: 40px;
-        }
-    }
-    
-    /* Móviles grandes */
-    @media (min-width: 480px) and (max-width: 767px) {
-        .apps-section {
-            padding-top: 30px;
-            height: auto;
-            min-height: 100vh;
-        }
-        
-        .icon-cards {
-            width: 85vw;
-            height: 65vw;
-        }
-        
-        .icon-cards__item {
-            width: 85vw;
-            height: 65vw;
-            padding: 15px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 1.5rem;
-        }
-        
-        .aplicacion-logo {
-            width: 60px;
-            height: 60px;
-            margin: 10px;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 0.9rem;
-            max-width: 90%;
-            margin-bottom: 15px;
-        }
-        
-        .aplicacion-button {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        
-        .titulo h1 {
-            font-size: 1.8rem;
-        }
-    }
-    
-    /* Móviles pequeños */
-    @media (max-width: 479px) {
-        .apps-section {
-            padding-top: 20px;
-            height: auto;
-            min-height: 100vh;
-        }
-        
-        .section-content {
-            padding: 10px 0;
-        }
-        
-        .icon-cards {
-            width: 90vw;
-            height: 75vw;
-            min-height: 300px;
-        }
-        
-        .icon-cards__item {
-            width: 90vw;
-            height: 75vw;
-            min-height: 300px;
-            padding: 10px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 1.3rem;
-        }
-        
-        .aplicacion-logo {
-            width: 50px;
-            height: 50px;
-            margin: 8px;
-        }
-        
-        .aplicacion-descripcion {
-            font-size: 0.85rem;
-            max-width: 95%;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-        
-        .aplicacion-button {
-            padding: 7px 14px;
-            font-size: 0.85rem;
-        }
-        
-        .titulo h1 {
-            font-size: 1.6rem;
-            margin-bottom: 15px;
-        }
-        
-        .mobile-indicators {
-            margin-top: 30px;
-        }
-        
-        .indicator {
-            width: 8px;
-            height: 8px;
-        }
-    }
-    
-    /* Ajustes para pantallas con altura reducida */
-    @media (max-height: 700px) {
-        .apps-section {
-            height: auto;
-            min-height: 100vh;
-        }
-        
-        .icon-cards__item_centrar {
-            justify-content: flex-start;
-            padding-top: 15px;
-        }
-        
-        .aplicacion-logo {
-            margin: 10px;
-        }
-        
-        .aplicacion-descripcion {
-            margin-bottom: 15px;
-        }
-    }
-    
-    /* Pantallas con orientación landscape en móviles */
-    @media (max-height: 500px) and (orientation: landscape) {
-        .apps-section {
-            height: auto;
-            min-height: 100vh;
-            padding-top: 10px;
-        }
-        
-        .icon-cards {
-            height: 45vw;
-            min-height: 250px;
-        }
-        
-        .icon-cards__item {
-            height: 45vw;
-            min-height: 250px;
-        }
-        
-        .icon-cards__item_centrar {
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center;
-            gap: 10px;
-        }
-        
-        .aplicacion-titulo {
-            font-size: 1.2rem;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .aplicacion-logo {
-            width: 45px;
-            height: 45px;
-            margin: 5px 15px;
-        }
-        
-        .aplicacion-descripcion {
-            width: calc(100% - 80px);
-            margin: 0;
-            text-align: left;
-        }
-        
-        .aplicacion-button {
-            margin-top: 5px;
-        }
-    }
+    /* #2 Media queries para responsive */
 </style>
