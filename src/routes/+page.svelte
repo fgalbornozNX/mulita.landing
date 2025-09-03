@@ -6,19 +6,8 @@
 	import integrantes from '../integrantesArray.json';
 </script>
 
-<div class="container">
+<div class="text-center h-full w-full overflow-y-scroll overflow-x-hidden box-border">
 	<section id="Inicio"><Inicio /></section>
 	<section id="Aplicaciones"><Aplicaciones {apps} /></section>
 	<section id="Nosotros"><Nosotros {integrantes} /></section>
 </div>
-
-<style>
-	.container {
-		text-align: center;
-		height: 100%; /* Set the height for the container */
-		width: 100%;
-		overflow-y: scroll; /* Enable vertical scrolling */
-		overflow-x: hidden; /* Disable horizontal scrolling */
-		box-sizing: border-box;
-	}
-</style>

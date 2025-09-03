@@ -49,12 +49,14 @@
     <link rel="preload" href="/fonts/PilcrowRounded-Bold.woff" as="font" type="font/woff" crossorigin="anonymous">
 </svelte:head>
 
-<div class="menu">
+
+<div class="fixed top-0 right-0 w-[100vw] flex flex-row h-[min(8vh,60px)] min-h-[45px] menu md:justify-end">
     <button class:selected={activeSection === 'Inicio'}         onclick={() => setActiveSection('Inicio')}>Inicio</button>
     <button class:selected={activeSection === 'Aplicaciones'}   onclick={() => setActiveSection('Aplicaciones')}>Aplicaciones</button>
     <button class:selected={activeSection === 'Nosotros'}       onclick={() => setActiveSection('Nosotros')}>Nosotros</button>
 </div>
 {@render children()}
+
 
 <style>
     @font-face {
@@ -73,15 +75,7 @@
     }
     
     .menu {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 100vw;
-        height: min(8vh, 60px);
-        min-height: 45px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end; /* Alinea los botones a la derecha */
+        /* justify-content: flex-end; /* Alinea los botones a la derecha */
         gap: 10px;
         background-color: rgba(52, 50, 51, 0.82);/* Fondo semi-transparente */
         padding: 10px 20px; /* Más padding a los lados para dar espacio */
