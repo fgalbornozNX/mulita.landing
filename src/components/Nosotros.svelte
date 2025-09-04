@@ -52,132 +52,234 @@
 <style>
     .nosotros-section {
         width: 100%;
-        height: 100%;
-        display: grid;
-		align-items: center;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 2rem 0;
+        background-color: var(--primary-background);
     }
 
     .cuerpo {
-        margin-top: max(10vh, 45px);
-		height: 90vh;
-        align-content: start;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
     }
     
-	h2{
+	h2 {
 		font-family: PilcrowRounded-Bold;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
 	}
 
     .cards-container {
         width: 100%;
         display: flex;
         justify-content: center;
-		margin-bottom: 30px;
+		margin-top: 3rem;
     }
     
     .icon-cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 1200px;
-        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        width: 100%;
+        padding: 1rem;
     }
 
-	.icon-cards button {
-		background-color: #c1e6d1;
-	}
-
-    .icon-cards button p {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: start;
-        margin-bottom: 0px;
-    }
-    
-    .icon-cards_item {
-        width: 300px;
-        margin: 30px;
+	.icon-cards_item {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 2rem;
         text-align: center;
-        transition: transform 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 8px 32px rgba(0,0,0,0.1),
+            0 2px 8px rgba(0,0,0,0.05);
+        cursor: pointer;
     }
-    
+
+    .icon-cards_item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+        transform-origin: left;
+    }
+
+    .icon-cards_item:hover::before {
+        transform: scaleX(1);
+    }
+
     .icon-cards_item:hover {
-        transform: translateY(-10px);
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 
+            0 20px 40px rgba(0,0,0,0.15),
+            0 8px 16px rgba(0,0,0,0.1);
+        border-color: rgba(var(--primary-color), 0.3);
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+    }
+
+    .icon-cards_item p {
+        color: var(--text-color);
+        line-height: 1.6;
+        margin: 1rem 0 0 0;
+        font-size: 0.95rem;
+        opacity: 0.9;
     }
     
     .integrante-foto {
-        max-width: 100%;
-        width: 300px;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid rgba(255,255,255,0.1);
+        box-shadow: 
+            0 8px 25px rgba(0,0,0,0.15),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+        margin: 0 auto 1.5rem auto;
+        display: block;
+    }
+
+    /* Ajustes específicos de posición para cada foto */
+    .integrante-foto[src="/Fer.jpg"] {
+        object-position: center 20%; /* Muestra más la parte superior */
+    }
+
+    .integrante-foto[src="/Peti.jpg"] {
+        object-position: center 35%; /* Sube ligeramente la imagen */
+    }
+
+    .integrante-foto[src="/Eevee.jpg"] {
+        object-position: center center; /* Mantiene centrada (por defecto) */
+    }
+
+    .icon-cards_item:hover .integrante-foto {
+        transform: scale(1.05);
+        border-color: var(--secondary-color);
+        box-shadow: 
+            0 12px 35px rgba(0,0,0,0.2),
+            0 0 0 2px var(--secondary-color),
+            inset 0 1px 0 rgba(255,255,255,0.2);
     }
 
     .eevee-ig {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center; /* Centra horizontalmente el contenido */
-        gap: 8px; /* Espaciado entre el SVG y el texto */
-        color: inherit; /* Mantiene el color del texto */
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    .eevee-ig span {
-        display: flex;
-        align-items: center;
-        justify-content: center; /* Alinea horizontalmente el contenido */
-        text-align: center;
+    .eevee-ig:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    }
+
+    .eevee-ig svg {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .eevee-ig:hover svg {
+        transform: rotate(10deg) scale(1.1);
     }
     
     /* Media Queries para diseño responsive */
     
-    /* Pantallas grandes */
-    @media screen and (max-width: 1200px) {
+    /* Tablets grandes */
+    @media screen and (max-width: 1024px) {
         .icon-cards {
-            max-width: 900px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .icon-cards_item {
+            padding: 1.5rem;
+        }
+        
+        .integrante-foto {
+            width: 180px;
+            height: 180px;
         }
     }
     
     /* Tablets */
-    @media screen and (max-width: 992px) {
-        .icon-cards {
-            max-width: 700px;
-        }
-        
-        .icon-cards_item {
-            width: 250px;
-            margin: 20px;
-        }
-        
-        .integrante-foto {
-            width: 250px;
-        }
-    }
-    
-    /* Tablets pequeñas y móviles grandes */
     @media screen and (max-width: 768px) {
+        .cuerpo {
+            padding: 0 1rem;
+        }
         
         .icon-cards {
-            flex-direction: column;
-            align-items: center;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 400px;
+            margin: 0 auto;
         }
         
         .icon-cards_item {
-            width: 80%;
-            max-width: 400px;
-            margin: 20px 0;
+            padding: 2rem 1.5rem;
         }
         
         .integrante-foto {
-            width: 100%;
+            width: 160px;
+            height: 160px;
         }
     }
     
     /* Móviles */
     @media screen and (max-width: 480px) {
+        .nosotros-section {
+            padding: 1rem 0;
+        }
+        
+        .cuerpo {
+            padding: 0 0.5rem;
+        }
+        
+        .icon-cards {
+            max-width: 100%;
+            gap: 1rem;
+        }
+        
         .icon-cards_item {
-            width: 90%;
-            margin: 15px 0;
+            padding: 1.5rem 1rem;
+            margin: 0;
+        }
+        
+        .integrante-foto {
+            width: 140px;
+            height: 140px;
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+        }
+        
+        .icon-cards_item p {
+            font-size: 0.9rem;
         }
     }
 </style>

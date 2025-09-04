@@ -1,42 +1,42 @@
 [
 	{
-		"titulo": "(1) Mulita Web",
+		"titulo": "Mulita Web",
 		"img": "/mulita.webp",
 		"alt": "Mulita Web",
 		"descripcion": "Este sitio web 😊"
 	},
 	{
-		"titulo": "(2) Mulita Hogar",
+		"titulo": "Mulita Hogar",
 		"img": "/logoHogar.png",
 		"alt": "Logo Hogar",
 		"descripcion": "Proyecto de IoT para manejo eficiente de luces y equipos eléctricos en el hogar"
 	},
 	{
-		"titulo": "(3) Mulita Riego",
+		"titulo": "Mulita Riego",
 		"img": "/caracol.png",
 		"alt": "Logo Caracol",
 		"descripcion": "Sistema simple de riego utilizando arduino y sensores de humedad"
 	},
 	{
-		"titulo": "(4) Mulita Finanzas",
+		"titulo": "Mulita Finanzas",
 		"img": "/logoPetunia.png",
 		"alt": "Logo Petuña",
 		"descripcion": "Aplicación para control de finanzas personales y familiares"
 	},
 	{
-		"titulo": "(5) Mulita Prode",
+		"titulo": "Mulita Prode",
 		"img": "/mulita.webp",
 		"alt": "Logo Prode",
 		"descripcion": "Aplicación prode (o penca) para jugar con amigos y predecir resultados deportivos"
 	},
 	{
-		"titulo": "(6) Mulita Otro 1",
+		"titulo": "Mulita Otro 1",
 		"img": "/Luz_switch_on.png",
 		"alt": "Logo Luz",
 		"descripcion": "Aplicación para controlar interruptores de luz"
 	},
 	{
-		"titulo": "(7) Mulita Otro 2",
+		"titulo": "Mulita Otro 2",
 		"img": "/temperatura.png",
 		"alt": "Logo Temperatura",
 		"descripcion": "Aplicación para controlar sensores de temperatura"

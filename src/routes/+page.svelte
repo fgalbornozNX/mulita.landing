@@ -6,8 +6,8 @@
 	import integrantes from '../integrantesArray.json';
 </script>
 
-<div class="text-center h-full w-full overflow-y-scroll overflow-x-hidden box-border">
-	<section id="Inicio"><Inicio /></section>
-	<section id="Aplicaciones"><Aplicaciones {apps} /></section>
-	<section id="Nosotros"><Nosotros {integrantes} /></section>
+<div class="text-center h-full w-full overflow-y-scroll overflow-x-hidden box-border snap-y snap-mandatory">
+	<section id="Inicio" class="snap-start"><Inicio /></section>
+	<section id="Aplicaciones" class="snap-start"><Aplicaciones {apps} /></section>
+	<section id="Nosotros" class="snap-start"><Nosotros {integrantes} /></section>
 </div>

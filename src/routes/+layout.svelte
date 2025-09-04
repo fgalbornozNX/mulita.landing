@@ -19,19 +19,30 @@
     onMount(() => {
         const options = {
             root: null,
-            rootMargin: '0px',
-            threshold: window.innerWidth <= 768 ? 0.3 : 0.6 // Se considera "visible" cuando al menos el X% de la sección está en pantalla
+            rootMargin: '-20% 0px -20% 0px', // Better margin for section detection
+            threshold: 0.3 // Consider section active when 30% is visible
         };
+        
         observer = new IntersectionObserver((entries) => {
+            // Find the entry with the largest intersection ratio
+            let maxIntersection = 0;
+            let activeEntry = null;
+            
             for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    if (sections.includes(id)) {
-                        activeSection = id;
-                    }
+                if (entry.isIntersecting && entry.intersectionRatio > maxIntersection) {
+                    maxIntersection = entry.intersectionRatio;
+                    activeEntry = entry;
+                }
+            }
+            
+            if (activeEntry) {
+                const id = activeEntry.target.id;
+                if (sections.includes(id)) {
+                    activeSection = id;
                 }
             }
         }, options);
+        
         // Observar cada sección
         for (const id of sections) {
             const sectionEl = document.getElementById(id);
