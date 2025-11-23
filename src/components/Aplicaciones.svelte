@@ -16,23 +16,25 @@
     // Responsive cards per view
     let cardsPerView = $state(1);
     let cardWidth = $state(320);
+    const GAP = 24; // 1.5rem = 24px, debe coincidir con gap-6 en el HTML
     
     // Touch/swipe support
     let touchStartX = 0;
     let touchEndX = 0;
+    let isDragging = false;
     
     function updateLayout() {
         if (typeof window !== 'undefined') {
             const width = window.innerWidth;
             if (width >= 1280) {
                 cardsPerView = 3;
-                cardWidth = 350; // Tamaño más consistente
+                cardWidth = 380; // Tamaño consistente para desktop
             } else if (width >= 768) {
                 cardsPerView = 2;
-                cardWidth = 340;
+                cardWidth = 360; // Tamaño consistente para tablet
             } else {
                 cardsPerView = 1;
-                cardWidth = Math.min(320, width - 40);
+                cardWidth = Math.min(340, width - 48); // Mayor margen en móvil
             }
         }
     }
@@ -41,11 +43,11 @@
         if (!container || !apps) return;
         
         // Ensure index is within bounds
-        activeIndex = Math.max(0, Math.min(index, apps.length - 1));
+        const boundedIndex = Math.max(0, Math.min(index, apps.length - 1));
+        activeIndex = boundedIndex;
         
-        // Calculate scroll position more precisely
-        const gap = 24; // 1.5rem = 24px
-        const scrollPosition = index * (cardWidth + gap);
+        // Calculate scroll position precisely
+        const scrollPosition = boundedIndex * (cardWidth + GAP);
         
         container.scrollTo({
             left: scrollPosition,
@@ -55,13 +57,17 @@
 
     function next() {
         if (!apps) return;
-        const nextIndex = (activeIndex + 1) % apps.length; // Circular navigation
+        const maxIndex = Math.max(0, apps.length - cardsPerView);
+        // Avanzar uno, con navegación circular limitada al rango navegable
+        const nextIndex = activeIndex >= maxIndex ? 0 : activeIndex + 1;
         scrollToSlide(nextIndex);
     }
 
     function prev() {
         if (!apps) return;
-        const prevIndex = activeIndex === 0 ? apps.length - 1 : activeIndex - 1; // Circular navigation
+        const maxIndex = Math.max(0, apps.length - cardsPerView);
+        // Retroceder uno, con navegación circular limitada al rango navegable
+        const prevIndex = activeIndex <= 0 ? maxIndex : activeIndex - 1;
         scrollToSlide(prevIndex);
     }
 
@@ -107,43 +113,55 @@
 
     // Simplified scroll handler
     let scrollTimeout: number | null = null;
+    let isScrolling = false;
+    
     function handleScroll() {
-        if (!container || !apps) return;
+        if (!container || !apps || isDragging) return;
         
         // Clear existing timeout
         if (scrollTimeout) {
             clearTimeout(scrollTimeout);
         }
         
+        isScrolling = true;
+        
         // Debounce the scroll handler to avoid conflicts during smooth scrolling
         scrollTimeout = window.setTimeout(() => {
             if (!container) return;
             
             const scrollLeft = container.scrollLeft;
-            const gap = 24;
-            const calculatedIndex = Math.round(scrollLeft / (cardWidth + gap));
+            const calculatedIndex = Math.round(scrollLeft / (cardWidth + GAP));
+            const boundedIndex = Math.max(0, Math.min(calculatedIndex, apps.length - 1));
             
-            // Only update if we're not in the middle of a programmatic scroll
-            if (calculatedIndex !== activeIndex && calculatedIndex >= 0 && calculatedIndex < apps.length) {
-                // Check if this is a user-initiated scroll (not programmatic)
-                const expectedScrollPosition = activeIndex * (cardWidth + gap);
-                const tolerance = 10; // 10px tolerance
-                
-                if (Math.abs(scrollLeft - expectedScrollPosition) > tolerance) {
-                    activeIndex = calculatedIndex;
-                }
+            // Solo actualizar si el índice cambió realmente
+            if (boundedIndex !== activeIndex) {
+                activeIndex = boundedIndex;
             }
-        }, 150);
+            
+            isScrolling = false;
+        }, 100);
     }
 
     // Touch/swipe handlers
     function handleTouchStart(e: TouchEvent) {
+        isDragging = true;
         touchStartX = e.touches[0].clientX;
         pauseAutoplay();
     }
 
+    function handleTouchMove(e: TouchEvent) {
+        if (!isDragging) return;
+        touchEndX = e.touches[0].clientX;
+    }
+
     function handleTouchEnd(e: TouchEvent) {
-        touchEndX = e.changedTouches[0].clientX;
+        if (!isDragging) return;
+        isDragging = false;
+        
+        if (touchEndX === 0) {
+            touchEndX = e.changedTouches[0].clientX;
+        }
+        
         handleSwipe();
         setTimeout(resumeAutoplay, 2000);
     }
@@ -161,6 +179,10 @@
                 prev();
             }
         }
+        
+        // Reset touch positions
+        touchStartX = 0;
+        touchEndX = 0;
     }
 
     onMount(() => {
@@ -173,11 +195,12 @@
         }, 100);
 
         const handleResize = () => {
+            const oldIndex = activeIndex;
             updateLayout();
-            // Recalculate position after resize
-            setTimeout(() => {
-                scrollToSlide(activeIndex, false);
-            }, 100);
+            // Recalculate position after resize without animation
+            requestAnimationFrame(() => {
+                scrollToSlide(oldIndex, false);
+            });
         };
 
         const handleKeydown = (e: KeyboardEvent) => {
@@ -239,8 +262,18 @@
         stopAutoplay();
     });
 
+    // Calculate maximum navigable slides (slides that actually cause scroll)
+    const maxNavigableIndex = $derived(() => {
+        if (!apps) return 0;
+        // En desktop (3 cards), si hay 7 elementos, solo necesitas scrollear hasta el índice 4 (mostrando 5, 6, 7)
+        // En tablet (2 cards), si hay 7 elementos, scrolleas hasta el índice 5 (mostrando 6, 7)
+        // En móvil (1 card), scrolleas todos los elementos
+        const maxIndex = Math.max(0, apps.length - cardsPerView);
+        return maxIndex;
+    });
+    
     // Calculate if navigation buttons should be shown
-    const showNavigation = $derived(apps && apps.length > 1);
+    const showNavigation = $derived(apps && apps.length > cardsPerView);
     const canScrollPrev = $derived(apps && apps.length > 0);
     const canScrollNext = $derived(apps && apps.length > 0);
 </script>
@@ -293,42 +326,49 @@
                 onmouseenter={pauseAutoplay}
                 onmouseleave={resumeAutoplay}
                 ontouchstart={handleTouchStart}
+                ontouchmove={handleTouchMove}
                 ontouchend={handleTouchEnd}
                 role="region"
                 aria-label="Carrusel de aplicaciones"
-                style="scroll-snap-type: x mandatory;"
+                style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
             >
                 <div class="flex gap-6 px-4" style="width: fit-content;">
                     {#if apps && apps.length}
                         {#each apps as app, index (app.titulo)}
                             <div 
                                 data-card 
+                                data-index={index}
                                 class="app-card flex-shrink-0 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group"
                                 style="width: {cardWidth}px; scroll-snap-align: start; background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%); border: 1px solid rgba(158, 190, 104, 0.3);"
                             >
                                 <div class="h-full flex flex-col">
-                                    <!-- Image Container with Gradient Overlay - Aumentado de h-48 a h-56 -->
-                                    <div class="relative h-56 overflow-hidden" style="background: linear-gradient(135deg, rgba(158, 190, 104, 0.1) 0%, rgba(163, 216, 0, 0.1) 100%);">
+                                    <!-- Image Container with Gradient Overlay -->
+                                    <div class="relative h-52 overflow-hidden" style="background: linear-gradient(135deg, rgba(158, 190, 104, 0.1) 0%, rgba(163, 216, 0, 0.1) 100%);">
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-10"></div>
                                         <img 
                                             src={app.img} 
                                             alt={app.alt} 
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                            class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700" 
+                                            loading="lazy"
                                         />
                                     </div>
                                     
-                                    <!-- Content - Reducido el padding -->
-                                    <div class="p-4 flex-1 flex flex-col">
-                                        <h3 class="text-lg font-bold mb-2 transition-colors duration-300" style="color: var(--primary-background); group-hover:color: var(--primary-color);">
+                                    <!-- Content -->
+                                    <div class="p-5 flex-1 flex flex-col">
+                                        <h3 class="text-xl font-bold mb-2 transition-colors duration-300" style="color: var(--primary-background);">
                                             {app.titulo}
                                         </h3>
-                                        <p class="leading-relaxed flex-1 text-sm" style="color: var(--primary-background); opacity: 0.7;">
+                                        <p class="leading-relaxed flex-1 text-sm" style="color: var(--primary-background); opacity: 0.75;">
                                             {app.descripcion}
                                         </p>
                                         
                                         <!-- Action Button -->
-                                        <div class="mt-3 pt-3" style="border-top: 1px solid rgba(158, 190, 104, 0.3);">
-                                            <button class="w-full text-white py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 font-medium text-sm shadow-md hover:shadow-lg" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); hover:box-shadow: 0 8px 25px rgba(158, 190, 104, 0.4);">
+                                        <div class="mt-4 pt-4" style="border-top: 1px solid rgba(158, 190, 104, 0.3);">
+                                            <button 
+                                                class="w-full text-white py-2.5 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 font-medium text-sm shadow-md hover:shadow-lg" 
+                                                style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);"
+                                                aria-label="Ver más sobre {app.titulo}"
+                                            >
                                                 Ver más
                                             </button>
                                         </div>
@@ -347,8 +387,9 @@
             </div>
         </div>
 
-        <!-- Indicators - Mejorados para ser más intuitivos -->
-        {#if apps && apps.length > 1}
+        <!-- Indicators - Solo mostrar posiciones navegables -->
+        {#if apps && apps.length > cardsPerView}
+            {@const maxIndex = Math.max(0, apps.length - cardsPerView)}
             <div class="flex justify-center items-center mt-8 gap-3">
                 <!-- Play/Pause Button -->
                 <button
@@ -370,16 +411,18 @@
                     {/if}
                 </button>
                 
-                {#each apps as app, i}
+                {#each Array(maxIndex + 1) as _, i}
+                    {@const slideApps = apps.slice(i, i + cardsPerView)}
+                    {@const tooltipText = slideApps.map((a: App) => a.titulo).join(', ')}
                     <button
                         class="relative group transition-all duration-300 hover:scale-125"
                         onclick={() => goToSlide(i)}
-                        aria-label={`Ir a ${app.titulo}`}
+                        aria-label={`Ir a ${tooltipText}`}
                     >
                         <div class="w-3 h-3 rounded-full transition-all duration-300 {i === activeIndex ? 'scale-125' : 'hover:bg-gray-500'}" style="background-color: {i === activeIndex ? 'var(--secondary-color)' : '#9ca3af'}"></div>
                         <!-- Tooltip -->
                         <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-                            {app.titulo}
+                            {tooltipText}
                         </div>
                     </button>
                 {/each}
@@ -387,16 +430,21 @@
         {/if}
 
         <!-- Progress Bar -->
-        {#if apps && apps.length > 1}
+        {#if apps && apps.length > cardsPerView}
+            {@const maxIndex = Math.max(0, apps.length - cardsPerView)}
+            {@const totalSlides = maxIndex + 1}
             <div class="mt-6 max-w-md mx-auto">
                 <div class="w-full bg-gray-600 rounded-full h-1">
                     <div 
                         class="h-1 rounded-full transition-all duration-500"
-                        style="width: {((activeIndex + 1) / apps.length) * 100}%; background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);"
+                        style="width: {((activeIndex + 1) / totalSlides) * 100}%; background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);"
                     ></div>
                 </div>
                 <div class="text-center mt-2 text-sm" style="color: var(--muted-text);">
-                    {activeIndex + 1} de {apps.length}
+                    {activeIndex + 1} de {totalSlides}
+                    {#if cardsPerView > 1}
+                        <span class="opacity-60">• Mostrando {Math.min(cardsPerView, apps.length - activeIndex)} de {apps.length} apps</span>
+                    {/if}
                 </div>
             </div>
         {/if}
@@ -418,7 +466,7 @@
     .app-card {
         transform: translateY(0);
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        min-height: 380px;
+        height: 450px; /* Altura fija para consistencia */
         backdrop-filter: blur(5px);
     }
 
@@ -431,22 +479,22 @@
         border-color: var(--primary-color) !important;
     }
 
-    /* Responsive adjustments */
+    /* Responsive height adjustments */
     @media (max-width: 640px) {
         .app-card {
-            min-height: 360px;
+            height: 420px;
         }
     }
 
     @media (min-width: 768px) {
         .app-card {
-            min-height: 400px;
+            height: 440px;
         }
     }
 
     @media (min-width: 1024px) {
         .app-card {
-            min-height: 420px;
+            height: 460px;
         }
     }
 
