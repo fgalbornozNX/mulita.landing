@@ -6,25 +6,8 @@
 	import integrantes from '../integrantesArray.json';
 </script>
 
-<div class="container">
-	<section id="Inicio"><Inicio /></section>
-	<section id="Aplicaciones"><Aplicaciones {apps} /></section>
-	<section id="Nosotros"><Nosotros {integrantes} /></section>
+<div class="text-center h-full w-full overflow-y-scroll overflow-x-hidden box-border snap-y snap-mandatory">
+	<section id="Inicio" class="snap-start"><Inicio /></section>
+	<section id="Aplicaciones" class="snap-start"><Aplicaciones {apps} /></section>
+	<section id="Nosotros" class="snap-start"><Nosotros {integrantes} /></section>
 </div>
-
-<style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
-	.container {
-		text-align: center;
-		height: 100%; /* Set the height for the container */
-		width: 100%;
-		overflow-y: scroll; /* Enable vertical scrolling */
-		overflow-x: hidden; /* Disable horizontal scrolling */
-		border: 1px solid black;
-	}
-</style>

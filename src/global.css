@@ -1,3 +1,7 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
 /* src/global.css */
 :root {
 	/* Colores principales */
@@ -16,11 +20,11 @@
 
 	h1 {
         margin: 0px;
-        font-size: 3rem;
+        font-size: clamp(0.8rem, min(8vw, 7vh), 3rem); /* tamaño ajustable por ancho y alto de la pantalla */
         font-family: PilcrowRounded-Bold;
         color: var(--primary-color);
         position: relative;
-        padding-bottom: 15px;
+        padding-bottom: 1vh;
     }
     
     /* Línea decorativa bajo el título */

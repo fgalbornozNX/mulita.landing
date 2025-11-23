@@ -19,19 +19,30 @@
     onMount(() => {
         const options = {
             root: null,
-            rootMargin: '0px',
-            threshold: 0.6 // Se considera "visible" cuando al menos el 60% de la sección está en pantalla
+            rootMargin: '-20% 0px -20% 0px', // Better margin for section detection
+            threshold: 0.3 // Consider section active when 30% is visible
         };
+        
         observer = new IntersectionObserver((entries) => {
+            // Find the entry with the largest intersection ratio
+            let maxIntersection = 0;
+            let activeEntry = null;
+            
             for (const entry of entries) {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    if (sections.includes(id)) {
-                        activeSection = id;
-                    }
+                if (entry.isIntersecting && entry.intersectionRatio > maxIntersection) {
+                    maxIntersection = entry.intersectionRatio;
+                    activeEntry = entry;
+                }
+            }
+            
+            if (activeEntry) {
+                const id = activeEntry.target.id;
+                if (sections.includes(id)) {
+                    activeSection = id;
                 }
             }
         }, options);
+        
         // Observar cada sección
         for (const id of sections) {
             const sectionEl = document.getElementById(id);
@@ -49,14 +60,14 @@
     <link rel="preload" href="/fonts/PilcrowRounded-Bold.woff" as="font" type="font/woff" crossorigin="anonymous">
 </svelte:head>
 
-<div class="container">
-    <div class="menu">
-        <button class:selected={activeSection === 'Inicio'}         onclick={() => setActiveSection('Inicio')}>Inicio</button>
-        <button class:selected={activeSection === 'Aplicaciones'}   onclick={() => setActiveSection('Aplicaciones')}>Aplicaciones</button>
-        <button class:selected={activeSection === 'Nosotros'}       onclick={() => setActiveSection('Nosotros')}>Nosotros</button>
-    </div>
+
+<div class="fixed top-0 right-0 w-[100vw] flex flex-row h-[min(8vh,60px)] min-h-[45px] menu md:justify-end">
+    <button class:selected={activeSection === 'Inicio'}         onclick={() => setActiveSection('Inicio')}>Inicio</button>
+    <button class:selected={activeSection === 'Aplicaciones'}   onclick={() => setActiveSection('Aplicaciones')}>Aplicaciones</button>
+    <button class:selected={activeSection === 'Nosotros'}       onclick={() => setActiveSection('Nosotros')}>Nosotros</button>
 </div>
 {@render children()}
+
 
 <style>
     @font-face {
@@ -71,33 +82,25 @@
     
     * {
         font-family: PilcrowRounded-Bold;
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
     }
     
     .menu {
-        position: fixed;
-        top: 0; /* Cambiado de bottom a top */
-        right: 0;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end; /* Alinea los botones a la derecha */
+        /* justify-content: flex-end; /* Alinea los botones a la derecha */
         gap: 10px;
-        background-color: rgba(52, 50, 51, 0.9); /* Fondo semi-transparente */
+        background-color: rgba(52, 50, 51, 0.82);/* Fondo semi-transparente */
         padding: 10px 20px; /* Más padding a los lados para dar espacio */
         z-index: 1000; /* Asegura que siempre esté por encima */
     }
     
     /* Ajustes para los botones */
     .menu button {
-		background-color: rgba(52, 50, 51, 0.9); /* Fondo semi-transparente */
-        /* background-color: var(--secondary-background); */
-        color: #ffffff;
+        background-color: transparent;
+        color: var(--text-color);
         border: none;
-        padding: 12px 20px;
-        font-size: 1.4rem;
+        outline: none;
+        font-size: min(1.4rem, 5vh);
+        line-height: 1;
         cursor: pointer;
         transition:
 			background-color 0.3s ease,
@@ -112,11 +115,6 @@
         transform: scale(1.3);
     }
     
-    /* Evitar que el contenido quede tapado */
-    .container {
-        padding-top: 60px; /* Cambiado de padding-bottom a padding-top */
-    }
-    
     /* Estilos para pantallas pequeñas */
     @media (max-width: 768px) {
         .menu {
@@ -129,24 +127,20 @@
         .menu button {
             flex: 1; /* Hace que cada botón ocupe una parte proporcional del espacio disponible */
             min-width: unset; /* Elimina el ancho mínimo fijo */
-            font-size: clamp(1.1rem, 3vw, 1.4rem); /* Tamaño de texto adaptable */
-            padding: 8px 5px;
         }
     }
 
     @media (max-width: 480px) {
         .menu {
             justify-content: space-between; /* Distribuye los botones uniformemente */
-            padding: 5px 10px;
         }
         
         .menu button {
-            font-size: clamp(0.9rem, 4vw, 1.4rem); /* Texto adaptable pero un poco más pequeño */
-            padding: 8px 2px;
+            font-size: clamp(2.4vw, 4.6vw, 1.4rem); /* Texto adaptable */
         }
         
         .menu button.selected {
-            transform: scale(1.05); /* Escala ligeramente reducida */
+            transform: unset; /* elimina el escalado del botón en pantalla pequeñas */
         }
     }
 </style>

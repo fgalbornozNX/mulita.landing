@@ -9,20 +9,56 @@
 
 		}; */
 		
+		// Animación más sofisticada y elegante del logo
 		let tl = gsap.timeline();
-		tl.to('.logo', { duration: 1.5, y: 18, rotation: 5 })
-		  .to('.logo', { duration: 1.5, y: 0, rotation: 0 });
-
+		
+		// Estados iniciales
+		gsap.set('.logo', { 
+			opacity: 0, 
+			scale: 0.3, 
+			rotationY: -180,
+			transformOrigin: "center center"
+		});
+		gsap.set('.titulo', { 
+			opacity: 0, 
+			y: 50,
+			scale: 0.8
+		});
+		
+		// Secuencia de animación principal
+		tl.to('.logo', { 
+			duration: 2, 
+			opacity: 1, 
+			scale: 1, 
+			rotationY: 0,
+			ease: "elastic.out(1, 0.5)"
+		})
+		.to('.titulo', { 
+			duration: 1, 
+			opacity: 1, 
+			y: 0,
+			scale: 1, 
+			ease: "back.out(1.7)"
+		}, "-=1.5")
+		// Animación sutil de rotación ocasional (más simple y efectiva)
+		.to('.logo', { 
+			duration: 8, 
+			rotation: 5,
+			ease: "power1.inOut",
+			yoyo: true,
+			repeat: -1,
+			repeatDelay: 4
+		}, "+=2");
 	});
 </script>
 
-<div class="inicio-section">
-	<div class="cuerpo">
+<section class="min-h-screen flex items-center justify-center py-8">
+	<div class="cuerpo flex flex-col items-center text-center mt-12 h-[90vh] px-4">
 		<!-- Logo de Mulita App -->
-		<svg
-			class="logo"
-			id="Capa_1"
-			data-name="Capa 1"
+			<svg
+			class="logo w-[74vw] sm:w-[66vw] md:w-[58vw] lg:w-[48vw] xl:w-[42vw] max-h-[80vh] rounded-[25%] mb-6 mt-6"
+			id="mulita_logo"
+			data-name="mulita_logo"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 1023.81 992.75"
 		>
@@ -50,52 +86,20 @@
 			<path class="color" d="M627.08,839.92c1.58,25.22-8.05,65.65-139.44,65.65-142.23,0-267.89-70.91-343.54-179.33-3.45-4.94.53-11.6,6.52-10.89,11.23,1.32,22.83,1.99,34.71,1.99,47.41,0,102.12-12.74,131.04-29.85,40.4-23.9,47.07-43.02,44.86-51.98-.77-3.12,1.3-5.38,4.62-4.8,76.77,13.44,191.39,93.05,224.35,132.82,25.8,31.12,35.64,56.44,36.89,76.4Z"/>
 			<path class="color" d="M660.27,857.59c-1.47-150.45-37.14-191.77-48.73-232.91-2.62-9.3,6.82-17.36,15.57-13.29,77.24,35.99,140.8,93.4,150.55,180.27,2.04,18.19-72.83,72-100.04,76.61-8.74,1.48-17.27-1.82-17.35-10.68Z"/>
 		</svg>
-		<div class="titulo">
-			<p>MULITA</p>
-		</div>
+	<div class="titulo text-4xl sm:text-6xl">MULITA</div>
 	</div>
-</div>
+</section>
 
 <style>
-	/* Estilo del logo y el título */
+	/* Minimal CSS: keep font and adaptive clamp size for the title */
 	.cuerpo {
 		font-family: PilcrowRounded-Bold;
-		font-size: 3rem;
-		/* font-weight: bold; */
+		font-size: clamp(0.8rem, min(12vw, 8vh), 3.5rem);
 		color: var(--text-color);
-		/* margin-bottom: 2rem; /* Espacio adicional para que el título no quede tapado */
 	}
 
 	.logo {
-		width: 55%; /* Ajusta el tamaño en función del 60% del ancho de la pantalla */
-		max-width: 400px; /* Limita el tamaño máximo */
-		height: auto;
-		border-radius: 25%;
-		margin-bottom: 0px;
-	}
-
-	.titulo P {
-		font-size: 3.5rem;
-	}
-
-	/* Media query para pantallas más grandes */
-	@media (min-width: 1366px) {
-		.logo {
-			width: 70%; /* Aún más pequeño en pantallas grandes */
-		}
-	}
-
-	/* Media query para dispositivos móviles */
-	@media (max-width: 768px) {
-		.logo {
-			width: 80%; /* Logo más grande en pantallas pequeñas */
-		}
-	}
-
-	/* Estilo para la sección Inicio para no quedar tapada por el menú */
-	.inicio-section {
-		height: 100vh; /* Altura completa de la ventana */
-		display: grid;
-		align-items: center;
+		/* size and rounding are handled via Tailwind utilities on the element */
+		display: block;
 	}
 </style>
