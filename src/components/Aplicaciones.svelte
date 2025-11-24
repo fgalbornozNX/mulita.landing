@@ -278,7 +278,7 @@
     const canScrollNext = $derived(apps && apps.length > 0);
 </script>
 
-<section class="py-16 min-h-screen flex items-center" style="background-color: var(--primary-background);">
+<section class="py-16 min-h-screen flex items-center">
     <div class="max-w-7xl mx-auto px-4 w-full">
         <!-- Title Section -->
         <div class="text-center mb-12">

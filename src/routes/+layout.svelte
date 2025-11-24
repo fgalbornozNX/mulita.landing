@@ -60,6 +60,8 @@
     <link rel="preload" href="/fonts/PilcrowRounded-Bold.woff" as="font" type="font/woff" crossorigin="anonymous">
 </svelte:head>
 
+<!-- Fondo animado con efecto de rejilla y gradiente -->
+<div class="fixed inset-0 bg-pattern"></div>
 
 <div class="fixed top-0 right-0 w-[100vw] flex flex-row h-[min(8vh,60px)] min-h-[45px] menu md:justify-end">
     <button class:selected={activeSection === 'Inicio'}         onclick={() => setActiveSection('Inicio')}>Inicio</button>
@@ -83,6 +85,43 @@
     * {
         font-family: PilcrowRounded-Bold;
         box-sizing: border-box;
+    }
+    
+    /* Fondo con patrón de rejilla y gradiente animado */
+    .bg-pattern {
+        background-color: var(--primary-background);
+        background-image: 
+            /* Gradiente radial sutil que se mueve */
+            radial-gradient(ellipse at 20% 30%, rgba(158, 190, 104, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 70%, rgba(163, 216, 0, 0.06) 0%, transparent 50%),
+            /* Patrón de puntos sutil */
+            radial-gradient(circle at center, rgba(158, 190, 104, 0.15) 1px, transparent 1px);
+        background-size: 
+            200% 200%,
+            200% 200%,
+            30px 30px;
+        background-position: 
+            0% 0%,
+            100% 100%,
+            0 0;
+        animation: backgroundShift 20s ease-in-out infinite;
+        z-index: -1;
+    }
+    
+    /* Animación sutil del gradiente */
+    @keyframes backgroundShift {
+        0%, 100% {
+            background-position: 
+                0% 0%,
+                100% 100%,
+                0 0;
+        }
+        50% {
+            background-position: 
+                100% 100%,
+                0% 0%,
+                0 0;
+        }
     }
     
     .menu {
