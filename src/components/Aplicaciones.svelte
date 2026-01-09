@@ -261,16 +261,6 @@
     onDestroy(() => {
         stopAutoplay();
     });
-
-    // Calculate maximum navigable slides (slides that actually cause scroll)
-    const maxNavigableIndex = $derived(() => {
-        if (!apps) return 0;
-        // En desktop (3 cards), si hay 7 elementos, solo necesitas scrollear hasta el índice 4 (mostrando 5, 6, 7)
-        // En tablet (2 cards), si hay 7 elementos, scrolleas hasta el índice 5 (mostrando 6, 7)
-        // En móvil (1 card), scrolleas todos los elementos
-        const maxIndex = Math.max(0, apps.length - cardsPerView);
-        return maxIndex;
-    });
     
     // Calculate if navigation buttons should be shown
     const showNavigation = $derived(apps && apps.length > cardsPerView);
@@ -278,7 +268,7 @@
     const canScrollNext = $derived(apps && apps.length > 0);
 </script>
 
-<section class="py-16 min-h-screen flex items-center" style="background-color: var(--primary-background);">
+<section class="py-16 min-h-screen flex items-center">
     <div class="max-w-7xl mx-auto px-4 w-full">
         <!-- Title Section -->
         <div class="text-center mb-12">
@@ -439,12 +429,6 @@
                         class="h-1 rounded-full transition-all duration-500"
                         style="width: {((activeIndex + 1) / totalSlides) * 100}%; background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);"
                     ></div>
-                </div>
-                <div class="text-center mt-2 text-sm" style="color: var(--muted-text);">
-                    {activeIndex + 1} de {totalSlides}
-                    {#if cardsPerView > 1}
-                        <span class="opacity-60">• Mostrando {Math.min(cardsPerView, apps.length - activeIndex)} de {apps.length} apps</span>
-                    {/if}
                 </div>
             </div>
         {/if}
