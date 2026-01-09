@@ -25,5 +25,5 @@ jobs:
             nvm use 20.14.0
             npm install
             npm run build
-            pm2 restart mulita-landing || pm2 start npm --name "mulita-landing" -- start -- --port 2388
+            pm2 restart mulita-landing || PORT=2389 pm2 start build/index.js --name "mulita-landing"
             pm2 save
